@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MusicService.DTOs;
 using MusicService.Exceptions;
-using MusicService.Models;
 using MusicService.Services.Interfaces;
 
 namespace MusicService.Controllers
@@ -56,7 +54,7 @@ namespace MusicService.Controllers
         // POST: api/Genre
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Genre>> PostGenre(GenreDTO gDTO)
+        public async Task<ActionResult<GenreDTO>> PostGenre(GenreDTO gDTO)
         {
             try {
                 await _service.PostGenre(gDTO);

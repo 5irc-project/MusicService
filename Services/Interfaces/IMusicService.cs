@@ -6,8 +6,8 @@ namespace MusicService.Services.Interfaces
     {
         Task<List<MusicDTO>> GetMusics();
         Task<MusicDTO?> GetMusic(int id);
-        Task PutMusic(int id, MusicDTO music);
-        Task PostMusic(MusicDTO music);
+        Task PutMusic(int id, MusicDTO mDTO);
+        Task PostMusic(MusicDTO mDTO);
         Task DeleteMusic(int id);
     }
 }

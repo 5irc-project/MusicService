@@ -1,9 +1,6 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MusicService.DTOs;
 using MusicService.Exceptions;
-using MusicService.Models;
 using MusicService.Services.Interfaces;
 
 namespace MusicService.Controllers
@@ -57,7 +54,7 @@ namespace MusicService.Controllers
         // POST: api/Music
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Music>> PostMusic(MusicDTO mDTO)
+        public async Task<ActionResult<MusicDTO>> PostMusic(MusicDTO mDTO)
         {
             try {
                 await _service.PostMusic(mDTO);
