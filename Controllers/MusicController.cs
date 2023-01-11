@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MusicService.DTOs;
+using MusicService.Exceptions;
 using MusicService.Models;
+using MusicService.Services.Interfaces;
 
 namespace MusicService.Controllers
 {
@@ -9,95 +12,75 @@ namespace MusicService.Controllers
     [ApiController]
     public class MusicController : ControllerBase
     {
-        private readonly MusicServiceDBContext _context;
+        private readonly IMusicService _service;
 
-        public MusicController(MusicServiceDBContext context)
+        public MusicController(IMusicService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Music
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Music>>> GetMusics()
+        public async Task<ActionResult<List<MusicDTO>>> GetMusics()
         {
-            return await _context.Musics.ToListAsync();
+            return await _service.GetMusics();
         }
 
         // GET: api/Music/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Music>> GetMusic(int id)
+        public async Task<ActionResult<MusicDTO?>> GetMusic(int id)
         {
-            var music = await _context.Musics.FindAsync(id);
-
-            if (music == null)
-            {
-                return NotFound();
-            }
-
-            return music;
+            var mDTO = await _service.GetMusic(id);
+            return mDTO == null ? NotFound() : mDTO;
         }
 
         // PUT: api/Music/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMusic(int id, Music music)
+        public async Task<IActionResult> PutMusic(int id, MusicDTO mDTO)
         {
-            if (id != music.MusicId)
+            if (id != mDTO.MusicId)
             {
                 return BadRequest();
             }
-
-            _context.Entry(music).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
+            
+            try{
+                await _service.PutMusic(id, mDTO);
+            }catch(MusicNotFoundException){
+                return NotFound();
+            }catch(Exception){
+                throw;
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MusicExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+    
             return NoContent();
         }
 
         // POST: api/Music
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Music>> PostMusic(Music music)
+        public async Task<ActionResult<Music>> PostMusic(MusicDTO mDTO)
         {
-            _context.Musics.Add(music);
-            await _context.SaveChangesAsync();
+            try {
+                await _service.PostMusic(mDTO);
+            }catch(Exception){
+                throw;
+            }
 
-            return CreatedAtAction("GetMusic", new { id = music.MusicId }, music);
+            return CreatedAtAction("GetMusic", new { id = mDTO.MusicId }, mDTO);
         }
 
         // DELETE: api/Music/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMusic(int id)
         {
-            var music = await _context.Musics.FindAsync(id);
-            if (music == null)
-            {
+            try{
+                await _service.DeleteMusic(id);
+            }catch (MusicNotFoundException){
                 return NotFound();
+            }catch(Exception){
+                throw;
             }
-
-            _context.Musics.Remove(music);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool MusicExists(int id)
-        {
-            return _context.Musics.Any(e => e.MusicId == id);
         }
     }
 }
