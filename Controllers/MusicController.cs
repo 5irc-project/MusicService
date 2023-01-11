@@ -39,8 +39,7 @@ namespace MusicService.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMusic(int id, MusicDTO mDTO)
         {
-            if (id != mDTO.MusicId)
-            {
+            if (id != mDTO.MusicId) {
                 return BadRequest();
             }
             

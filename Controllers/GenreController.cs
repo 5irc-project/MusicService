@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MusicService.DTOs;
+using MusicService.Exceptions;
 using MusicService.Models;
+using MusicService.Services.Interfaces;
 
 namespace MusicService.Controllers
 {
@@ -13,95 +11,73 @@ namespace MusicService.Controllers
     [ApiController]
     public class GenreController : ControllerBase
     {
-        private readonly MusicServiceDBContext _context;
+        private readonly IGenreService _service;
 
-        public GenreController(MusicServiceDBContext context)
+        public GenreController(IGenreService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Genre
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
+        public async Task<ActionResult<List<GenreDTO>>> GetGenres()
         {
-            return await _context.Genres.ToListAsync();
+            return await _service.GetGenres();
         }
 
         // GET: api/Genre/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Genre>> GetGenre(int id)
+        public async Task<ActionResult<GenreDTO>> GetGenre(int id)
         {
-            var genre = await _context.Genres.FindAsync(id);
-
-            if (genre == null)
-            {
-                return NotFound();
-            }
-
-            return genre;
+            var gDTO = await _service.GetGenre(id);
+            return gDTO == null ? NotFound() : gDTO;
         }
 
         // PUT: api/Genre/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGenre(int id, Genre genre)
+        public async Task<IActionResult> PutGenre(int id, GenreDTO gDTO)
         {
-            if (id != genre.GenreId)
-            {
+            if (id != gDTO.GenreId) {
                 return BadRequest();
             }
-
-            _context.Entry(genre).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
+            
+            try{
+                await _service.PutGenre(id, gDTO);
+            }catch(GenreNotFoundException){
+                return NotFound();
+            }catch(Exception){
+                throw;
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GenreExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+    
             return NoContent();
         }
 
         // POST: api/Genre
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Genre>> PostGenre(Genre genre)
+        public async Task<ActionResult<Genre>> PostGenre(GenreDTO gDTO)
         {
-            _context.Genres.Add(genre);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetGenre", new { id = genre.GenreId }, genre);
+            try {
+                await _service.PostGenre(gDTO);
+            }catch(Exception){
+                throw;
+            }
+            return CreatedAtAction("GetGenre", new { id = gDTO.GenreId }, gDTO);
         }
 
         // DELETE: api/Genre/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGenre(int id)
         {
-            var genre = await _context.Genres.FindAsync(id);
-            if (genre == null)
-            {
+             try{
+                await _service.DeleteGenre(id);
+            }catch (GenreNotFoundException){
                 return NotFound();
+            }catch(Exception){
+                throw;
             }
-
-            _context.Genres.Remove(genre);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool GenreExists(int id)
-        {
-            return _context.Genres.Any(e => e.GenreId == id);
         }
     }
 }

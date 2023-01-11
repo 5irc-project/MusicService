@@ -8,6 +8,7 @@ namespace MusicService.Helpers
     {
         public AutoMapperProfiles(){
             CreateMap<Music, MusicDTO>();
+            CreateMap<Genre, GenreDTO>();
         }
         
     }

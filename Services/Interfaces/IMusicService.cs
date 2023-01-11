@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using MusicService.DTOs;
 
 namespace MusicService.Services.Interfaces
