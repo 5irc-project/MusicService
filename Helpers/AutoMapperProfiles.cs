@@ -10,6 +10,7 @@ namespace MusicService.Helpers
             CreateMap<Music, MusicDTO>();
             CreateMap<Genre, GenreDTO>();
             CreateMap<Playlist, PlaylistDTO>();
+            CreateMap<Mood, MoodDTO>();
         }
         
     }

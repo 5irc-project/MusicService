@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using MusicService.Models;
 using MusicService.Services.Interfaces;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using MusicService.Exceptions;
 using AutoMapper;
