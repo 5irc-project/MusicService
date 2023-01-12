@@ -18,14 +18,14 @@ namespace MusicService.Controllers
 
         // GET: api/Playlist
         [HttpGet]
-        public async Task<ActionResult<List<PlaylistDTO>>> GetPlaylists()
+        public async Task<ActionResult<List<PlaylistGetDTO>>> GetPlaylists()
         {
             return await _service.GetPlaylists();
         }
 
         // GET: api/Playlist/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PlaylistDTO>> GetPlaylist(int id)
+        public async Task<ActionResult<PlaylistGetDTO>> GetPlaylist(int id)
         {
             var pDTO = await _service.GetPlaylist(id);
             return pDTO == null ? NotFound() : pDTO;
@@ -42,9 +42,7 @@ namespace MusicService.Controllers
             
             try{
                 await _service.PutPlaylist(id, pDTO);
-            }catch(PlaylistNotFoundException){
-                return NotFound();
-            }catch(TrackNotFoundException){
+            }catch(NotFoundException){
                 return NotFound();
             }catch(Exception){
                 throw;
@@ -60,8 +58,6 @@ namespace MusicService.Controllers
         {
             try {
                 await _service.PostPlaylist(pDTO);
-            }catch(TrackNotFoundException){
-                return NotFound();
             }catch(Exception){
                 throw;
             }
@@ -75,7 +71,7 @@ namespace MusicService.Controllers
         {
             try{
                 await _service.DeletePlaylist(id);
-            }catch (PlaylistNotFoundException){
+            }catch (NotFoundException){
                 return NotFound();
             }catch(Exception){
                 throw;

@@ -42,7 +42,7 @@ namespace MusicService.Controllers
             
             try{
                 await _service.PutGenre(id, gDTO);
-            }catch(GenreNotFoundException){
+            }catch(NotFoundException){
                 return NotFound();
             }catch(Exception){
                 throw;
@@ -70,7 +70,7 @@ namespace MusicService.Controllers
         {
              try{
                 await _service.DeleteGenre(id);
-            }catch (GenreNotFoundException){
+            }catch (NotFoundException){
                 return NotFound();
             }catch(Exception){
                 throw;

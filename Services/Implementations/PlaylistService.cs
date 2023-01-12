@@ -23,42 +23,60 @@ namespace MusicService.Services.Implementations
             var playlist = await _context.Playlists.FindAsync(id);
             if (playlist == null)
             {
-                throw new PlaylistNotFoundException(id);
+                    throw new NotFoundException(id, nameof(Playlist));
             }
             _context.Playlists.Remove(playlist);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PlaylistDTO?> GetPlaylist(int id)
+        public async Task<PlaylistGetDTO?> GetPlaylist(int id)
         {
-            return _mapper.Map<PlaylistDTO>(await _context.Playlists.FindAsync(id));
+            Playlist? p = await _context.Playlists.FindAsync(id);
+            if (p == null){
+                return null;
+            }
+            PlaylistGetDTO pGD = _mapper.Map<PlaylistGetDTO>(p);
+            #pragma warning disable CS8604
+            foreach(PlaylistTrack playlistTrack in p.PlaylistTracks){
+                pGD.Tracks.Add(
+                    _mapper.Map<TrackDTO>(_context.Tracks.Find(playlistTrack.TrackId))
+                );
+            }
+            #pragma warning restore CS8601  
+            return pGD;
         }
 
-        public async Task<List<PlaylistDTO>> GetPlaylists()
+        public async Task<List<PlaylistGetDTO>> GetPlaylists()
         {
-            return _mapper.Map<List<PlaylistDTO>>(await _context.Playlists.ToListAsync());
+            List<Playlist> lP = await _context.Playlists.ToListAsync();
+            List<PlaylistGetDTO> lPG = new List<PlaylistGetDTO>();
+            lP.ForEach(p => {
+                PlaylistGetDTO pGD = _mapper.Map<PlaylistGetDTO>(p);
+                #pragma warning disable CS8604
+                foreach(PlaylistTrack playlistTrack in p.PlaylistTracks){
+                    pGD.Tracks.Add(
+                        _mapper.Map<TrackDTO>(_context.Tracks.Find(playlistTrack.TrackId))
+                    );
+                }
+                #pragma warning restore CS8601 
+                lPG.Add(pGD);
+
+            });
+            return lPG;        
         }
 
         public async Task PostPlaylist(PlaylistDTO pDTO)
         {
-            if (pDTO.Tracks?.All(t => _context.Tracks.Find(t.TrackId) != null) == true){
-                _context.Playlists.Add(_mapper.Map<Playlist>(pDTO));
-                await _context.SaveChangesAsync();
-            }else{
-                throw new TrackNotFoundException("The tracks given do not exist");
-            }
+            _context.Playlists.Add(_mapper.Map<Playlist>(pDTO));
+            await _context.SaveChangesAsync();
         }
 
         public async Task PutPlaylist(int id, PlaylistDTO pDTO)
         {
-            if (pDTO.Tracks?.All(t => _context.Tracks.Find(t.TrackId) != null) == true){
-                _context.Entry(_mapper.Map<Playlist>(pDTO)).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                if (!_context.Playlists.Any(e => e.PlaylistId == id)){
-                        throw new PlaylistNotFoundException(id);
-                }
-            }else{
-                throw new TrackNotFoundException("The tracks given do not exist");
+            _context.Entry(_mapper.Map<Playlist>(pDTO)).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            if (!_context.Playlists.Any(e => e.PlaylistId == id)){
+                    throw new NotFoundException(id, nameof(Playlist));
             }
         }
     }

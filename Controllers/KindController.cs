@@ -42,7 +42,7 @@ namespace MusicService.Controllers
             
             try{
                 await _service.PutKind(id, kDTO);
-            }catch(KindNotFoundException){
+            }catch(NotFoundException){
                 return NotFound();
             }catch(Exception){
                 throw;
@@ -71,7 +71,7 @@ namespace MusicService.Controllers
         {
             try{
                 await _service.DeleteKind(id);
-            }catch (KindNotFoundException){
+            }catch (NotFoundException){
                 return NotFound();
             }catch(Exception){
                 throw;

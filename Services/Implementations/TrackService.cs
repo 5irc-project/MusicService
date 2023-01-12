@@ -23,49 +23,59 @@ namespace MusicService.Services.Implementations
             var track = await _context.Tracks.FindAsync(id);
             if (track == null)
             {
-                throw new TrackNotFoundException(id);
+                throw new NotFoundException(id, nameof(Track));
             }
             _context.Tracks.Remove(track);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<TrackDTO?> GetTrack(int id)
+        public async Task<TrackGetDTO?> GetTrack(int id)
         {
-            return _mapper.Map<TrackDTO>(await _context.Tracks.FindAsync(id));
+            Track? t = await _context.Tracks.FindAsync(id);
+            if (t == null){
+                return null;
+            }
+            TrackGetDTO tGD = _mapper.Map<TrackGetDTO>(t);
+            #pragma warning disable CS8604
+            foreach(TrackGenre trackGenre in t.TrackGenres){
+                tGD.Genres.Add(
+                    _mapper.Map<GenreDTO>(_context.Genres.Find(trackGenre.GenreId))
+                );
+            }
+            #pragma warning restore CS8601  
+            return tGD;
         }
 
-        public async Task<List<TrackDTO>> GetTracks()
+        public async Task<List<TrackGetDTO>> GetTracks()
         {
-            return _mapper.Map<List<TrackDTO>>(await _context.Tracks.ToListAsync());
+            List<Track> lT = await _context.Tracks.ToListAsync();
+            List<TrackGetDTO> lTG = new List<TrackGetDTO>();
+            lT.ForEach(t => {
+                TrackGetDTO tGD = _mapper.Map<TrackGetDTO>(t);
+                #pragma warning disable CS8604
+                foreach(TrackGenre trackGenre in t.TrackGenres){
+                    tGD.Genres.Add(
+                        _mapper.Map<GenreDTO>(_context.Genres.Find(trackGenre.GenreId))
+                    );
+                }
+                #pragma warning restore CS8601
+                lTG.Add(tGD);
+            });
+            return lTG;
         }
 
         public async Task PostTrack(TrackDTO tDTO)
         {
-            if (tDTO.Genres?.All(g => _context.Genres.AsNoTracking().FirstOrDefault(gBis => gBis.GenreId == g.GenreId) != null) == true){
-                Track t = _mapper.Map<Track>(tDTO);
-                _context.Tracks.Add(t);
-                foreach(Genre g in t.Genres){
-                    _context.Entry(t.Genres.FirstOrDefault(gBis => gBis.GenreId == g.GenreId)).State = EntityState.Unchanged;
-                }
-                await _context.SaveChangesAsync();
-            }else{
-                throw new GenreNotFoundException("The given genres do not exist");
-            }
-            
+            _context.Tracks.Add(_mapper.Map<Track>(tDTO));
+            await _context.SaveChangesAsync();
         }
 
         public async Task PutTrack(int id, TrackDTO tDTO)
         {
-            if (tDTO.Genres?.All(g => _context.Genres.AsNoTracking().FirstOrDefault(gBis => gBis.GenreId == g.GenreId) != null) == true){
-                Track t = _mapper.Map<Track>(tDTO);
-                _context.Entry(t).State = EntityState.Modified;
-               
-                await _context.SaveChangesAsync();
-                if (!_context.Tracks.Any(e => e.TrackId == id)){
-                        throw new TrackNotFoundException(id);
-                }
-            }else{
-                throw new GenreNotFoundException("The given genres do not exist");
+            _context.Entry(_mapper.Map<Track>(tDTO)).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            if (!_context.Tracks.Any(e => e.TrackId == id)){
+                    throw new NotFoundException(id, nameof(Track));
             }
         }
     }

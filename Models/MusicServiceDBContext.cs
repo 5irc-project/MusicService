@@ -10,21 +10,22 @@ namespace MusicService.Models
         public DbSet<Genre> Genres { get; set; } = null!;
         public DbSet<Kind> Kinds { get; set; } = null!;
         public DbSet<Playlist> Playlists { get; set; } = null!;
+        public DbSet<PlaylistTrack> PlaylistTracks { get; set; } = null!;
+        public DbSet<TrackGenre> TrackGenres { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder){
-            modelBuilder.HasDefaultSchema("public");
+            // PlaylistTrack
+            modelBuilder.Entity<PlaylistTrack>().HasKey(pt => new { pt.PlaylistId, pt.TrackId });
 
-            // modelBuilder.Entity<Mood>().HasData(
-            //     new Mood(-1, "Mood1"),
-            //     new Mood(-2, "Mood2")
-            // );
+            // TrackGenre
+            modelBuilder.Entity<TrackGenre>().HasKey(tg => new { tg.TrackId, tg.GenreId });
 
-            // modelBuilder.Entity<Genre>().HasData(
-            //     new Genre(-1, "Genre1"),
-            //     new Genre(-2, "Genre2"),
-            //     new Genre(-3, "Genre3"),
-            //     new Genre(-4, "Genre4")
-            // );
+            // Playlist
+            modelBuilder.Entity<Playlist>()
+                .HasOne<Kind>(p => p.Kind)
+                .WithMany(p => p.Playlists)
+                .HasForeignKey(p => p.KindId);
 
             base.OnModelCreating(modelBuilder);
         }

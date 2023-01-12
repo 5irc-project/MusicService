@@ -2,7 +2,7 @@ using MusicService.Models;
 
 namespace MusicService.DTOs
 {
-    public class TrackDTO
+    public class TrackGetDTO
     {
         public int TrackId { get; set; }
         public string? ArtistName { get; set; }
@@ -19,5 +19,6 @@ namespace MusicService.DTOs
         public float? Loudness { get; set; }
         public float? Speechiness { get; set; }
         public float? Valence { get; set; }
+        public virtual ICollection<GenreDTO> Genres { get; set; } = null!;    
     }
 }

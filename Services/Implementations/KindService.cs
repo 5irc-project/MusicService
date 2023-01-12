@@ -23,7 +23,7 @@ namespace MusicService.Services.Implementations
             var kind = await _context.Kinds.FindAsync(id);
             if (kind == null)
             {
-                throw new KindNotFoundException(id);
+                throw new NotFoundException(id, nameof(Kind));
             }
             _context.Kinds.Remove(kind);
             await _context.SaveChangesAsync();
@@ -50,7 +50,7 @@ namespace MusicService.Services.Implementations
             _context.Entry(_mapper.Map<Kind>(kDTO)).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             if (!_context.Kinds.Any(e => e.KindId == id)){
-                    throw new KindNotFoundException(id);
+                    throw new NotFoundException(id, nameof(Kind));
             }
         }
     }

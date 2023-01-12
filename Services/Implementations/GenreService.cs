@@ -23,7 +23,7 @@ namespace MusicService.Services.Implementations
             var genre = await _context.Genres.FindAsync(id);
             if (genre == null)
             {
-                throw new GenreNotFoundException(id);
+                throw new NotFoundException(id, nameof(Genre));
             }
             _context.Genres.Remove(genre);
             await _context.SaveChangesAsync();
@@ -50,7 +50,7 @@ namespace MusicService.Services.Implementations
             _context.Entry(_mapper.Map<Genre>(gDTO)).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             if (!_context.Genres.Any(e => e.GenreId == id)){
-                    throw new GenreNotFoundException(id);
+                throw new NotFoundException(id, nameof(Genre));
             }
         }
     }
