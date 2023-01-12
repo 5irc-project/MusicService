@@ -1,5 +1,3 @@
-using MusicService.Models;
-
 namespace MusicService.DTOs
 {
     public class PlaylistDTO
@@ -8,6 +6,6 @@ namespace MusicService.DTOs
         public int UserId { get; set; }
         public int MoodId { get; set; }
         public string? PlaylistName { get; set; }
-        public virtual ICollection<Music>? Musics { get; set; }
+        public virtual ICollection<TrackDTO>? Tracks { get; set; }
     }
 }

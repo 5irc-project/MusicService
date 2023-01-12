@@ -1,48 +1,48 @@
 using Microsoft.AspNetCore.Mvc;
-using MusicService.DTOs;
 using MusicService.Exceptions;
+using MusicService.DTOs;
 using MusicService.Services.Interfaces;
 
 namespace MusicService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MusicController : ControllerBase
+    public class KindController : ControllerBase
     {
-        private readonly IMusicService _service;
+        private readonly IKindService _service;
 
-        public MusicController(IMusicService service)
+        public KindController(IKindService service)
         {
             _service = service;
         }
 
-        // GET: api/Music
+        // GET: api/Kind
         [HttpGet]
-        public async Task<ActionResult<List<MusicDTO>>> GetMusics()
+        public async Task<ActionResult<List<KindDTO>>> GetKinds()
         {
-            return await _service.GetMusics();
+            return await _service.GetKinds();
         }
 
-        // GET: api/Music/5
+        // GET: api/Kind/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MusicDTO?>> GetMusic(int id)
+        public async Task<ActionResult<KindDTO>> GetKind(int id)
         {
-            var mDTO = await _service.GetMusic(id);
-            return mDTO == null ? NotFound() : mDTO;
+            var kDTO = await _service.GetKind(id);
+            return kDTO == null ? NotFound() : kDTO;
         }
 
-        // PUT: api/Music/5
+        // PUT: api/Kind/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMusic(int id, MusicDTO mDTO)
+        public async Task<IActionResult> PutKind(int id, KindDTO kDTO)
         {
-            if (id != mDTO.MusicId) {
+            if (id != kDTO.KindId) {
                 return BadRequest();
             }
             
             try{
-                await _service.PutMusic(id, mDTO);
-            }catch(MusicNotFoundException){
+                await _service.PutKind(id, kDTO);
+            }catch(KindNotFoundException){
                 return NotFound();
             }catch(Exception){
                 throw;
@@ -51,27 +51,27 @@ namespace MusicService.Controllers
             return NoContent();
         }
 
-        // POST: api/Music
+        // POST: api/Kind
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<MusicDTO>> PostMusic(MusicDTO mDTO)
+        public async Task<ActionResult<KindDTO>> PostKind(KindDTO kDTO)
         {
             try {
-                await _service.PostMusic(mDTO);
+                await _service.PostKind(kDTO);
             }catch(Exception){
                 throw;
             }
 
-            return CreatedAtAction("GetMusic", new { id = mDTO.MusicId }, mDTO);
+            return CreatedAtAction("GetKind", new { id = kDTO.KindId }, kDTO);
         }
 
-        // DELETE: api/Music/5
+        // DELETE: api/Kind/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMusic(int id)
+        public async Task<IActionResult> DeleteKind(int id)
         {
             try{
-                await _service.DeleteMusic(id);
-            }catch (MusicNotFoundException){
+                await _service.DeleteKind(id);
+            }catch (KindNotFoundException){
                 return NotFound();
             }catch(Exception){
                 throw;

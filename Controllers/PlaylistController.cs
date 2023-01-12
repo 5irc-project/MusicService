@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MusicService.DTOs;
 using MusicService.Exceptions;
 using MusicService.Services.Interfaces;
@@ -45,6 +44,8 @@ namespace MusicService.Controllers
                 await _service.PutPlaylist(id, pDTO);
             }catch(PlaylistNotFoundException){
                 return NotFound();
+            }catch(TrackNotFoundException){
+                return NotFound();
             }catch(Exception){
                 throw;
             }
@@ -59,6 +60,8 @@ namespace MusicService.Controllers
         {
             try {
                 await _service.PostPlaylist(pDTO);
+            }catch(TrackNotFoundException){
+                return NotFound();
             }catch(Exception){
                 throw;
             }

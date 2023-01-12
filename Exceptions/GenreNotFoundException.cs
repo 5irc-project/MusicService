@@ -9,5 +9,9 @@ namespace MusicService.Exceptions
         public GenreNotFoundException(int genreId) : base(DefaultMessage) {
             GenreId = genreId;
         }
+
+        public GenreNotFoundException(string message) : base(message)
+        {
+        }
     }
 }

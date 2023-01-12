@@ -1,10 +1,8 @@
-using MusicService.Models;
-
 namespace MusicService.DTOs
 {
-    public class MusicDTO
+    public class TrackDTO
     {
-        public int MusicId { get; set; }
+        public int TrackId { get; set; }
         public string? ArtistName { get; set; }
         public string? TrackName { get; set; }
         public float? Popularity { get; set; }
@@ -19,6 +17,6 @@ namespace MusicService.DTOs
         public float? Loudness { get; set; }
         public float? Speechiness { get; set; }
         public float? Valence { get; set; }
-        public virtual ICollection<Genre>? Genres { get; set; }
+        public virtual ICollection<GenreDTO>? Genres { get; set; }
     }
 }

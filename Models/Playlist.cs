@@ -1,25 +1,23 @@
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MusicService.Models
 {
-    [Table("t_e_playlist_plst")]
+    [Table("playlist")]
     public class Playlist
     {
-        [Column("plst_id")]
+        [Column("p_id")]
         public int PlaylistId { get; set; }
 
-        [Column("usr_id")]
+        [Column("u_id")]
         public int UserId { get; set; }
 
-        [Column("mood_id")]
-        public int MoodId { get; set; }
+        [Column("k_id")]
+        [ForeignKey("KindId")]
+        public int KindId { get; set; }
 
-        [Column("plst_name")]
+        [Column("p_name")]
         public string? PlaylistName { get; set; }
 
-        public virtual ICollection<Music>? Musics { get; set; }
+        public virtual ICollection<Track>? Tracks { get; set; }
     }
 }

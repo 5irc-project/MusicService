@@ -7,10 +7,10 @@ namespace MusicService.Helpers
     public class AutoMapperProfiles : Profile
     {
         public AutoMapperProfiles(){
-            CreateMap<Music, MusicDTO>();
-            CreateMap<Genre, GenreDTO>();
-            CreateMap<Playlist, PlaylistDTO>();
-            CreateMap<Mood, MoodDTO>();
+            CreateMap<Track, TrackDTO>().ReverseMap();
+            CreateMap<Genre, GenreDTO>().ReverseMap();
+            CreateMap<Playlist, PlaylistDTO>().ReverseMap();
+            CreateMap<Kind, KindDTO>().ReverseMap();
         }
         
     }

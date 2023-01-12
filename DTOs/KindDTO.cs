@@ -1,8 +1,8 @@
 namespace MusicService.DTOs
 {
-    public class MoodDTO
+    public class KindDTO
     {
-        public int MoodId { get; set; }
+        public int KindId { get; set; }
         public string? Name { get; set; }
     }
 }

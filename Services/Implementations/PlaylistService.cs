@@ -41,16 +41,24 @@ namespace MusicService.Services.Implementations
 
         public async Task PostPlaylist(PlaylistDTO pDTO)
         {
-            _context.Playlists.Add(_mapper.Map<Playlist>(pDTO));
-            await _context.SaveChangesAsync();
+            if (pDTO.Tracks?.All(t => _context.Tracks.Find(t.TrackId) != null) == true){
+                _context.Playlists.Add(_mapper.Map<Playlist>(pDTO));
+                await _context.SaveChangesAsync();
+            }else{
+                throw new TrackNotFoundException("The tracks given do not exist");
+            }
         }
 
         public async Task PutPlaylist(int id, PlaylistDTO pDTO)
         {
-            _context.Entry(_mapper.Map<Playlist>(pDTO)).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            if (!_context.Playlists.Any(e => e.PlaylistId == id)){
-                    throw new PlaylistNotFoundException(id);
+            if (pDTO.Tracks?.All(t => _context.Tracks.Find(t.TrackId) != null) == true){
+                _context.Entry(_mapper.Map<Playlist>(pDTO)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                if (!_context.Playlists.Any(e => e.PlaylistId == id)){
+                        throw new PlaylistNotFoundException(id);
+                }
+            }else{
+                throw new TrackNotFoundException("The tracks given do not exist");
             }
         }
     }
