@@ -33,3 +33,5 @@ Check that stuff doesn't already exist when adding genres or tracks to tracks or
 Also return a notfound error or smthing when trying to add non existant genres / tracks to tracks / playlists
 Then do tests
 Then isoki guess
+
+En gros le pb c'était que quand j'ajoute une musique si je veux lui associer un genre faut que je le get via le context comme ça la bdd le track et ne va pas tenter de le créer une nouvelle fois.
