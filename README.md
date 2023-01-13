@@ -33,3 +33,10 @@ Check that stuff doesn't already exist when adding genres or tracks to tracks or
 Also return a notfound error or smthing when trying to add non existant genres / tracks to tracks / playlists
 Then do tests
 Then isoki guess
+
+Ajouter une méthode qui permet d'ajouter des musiques avec des genres directement
+
+TOFIX : 
+
+Get tracks marche pas (le trackgenres n'est pas lié ? donc la même pr playlist)
+Faut faire des includes sinon ça track pas ce qu'il faut
