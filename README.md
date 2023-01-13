@@ -40,3 +40,4 @@ TOFIX :
 
 Get tracks marche pas (le trackgenres n'est pas lié ? donc la même pr playlist)
 Faut faire des includes sinon ça track pas ce qu'il faut
+En gros le pb c'était que quand j'ajoute une musique si je veux lui associer un genre faut que je le get via le context comme ça la bdd le track et ne va pas tenter de le créer une nouvelle fois.
