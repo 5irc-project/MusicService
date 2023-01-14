@@ -41,13 +41,13 @@ namespace MusicService.Services.Implementations
             
             TrackWithGenresDTO twgDTO = _mapper.Map<TrackWithGenresDTO>(t);
             twgDTO.Genres = new List<GenreDTO>();
-            #pragma warning disable CS8604
+            #pragma warning disable CS8602
             foreach(TrackGenre trackGenre in t.TrackGenres){
                 twgDTO.Genres.Add(
                     _mapper.Map<GenreDTO>(_context.Genres.Find(trackGenre.GenreId))
                 );
             }
-            #pragma warning restore CS8601  
+            #pragma warning restore CS8602
             return twgDTO;
         }
 
@@ -60,11 +60,13 @@ namespace MusicService.Services.Implementations
             lT.ForEach(t => {
                 TrackWithGenresDTO tGD = _mapper.Map<TrackWithGenresDTO>(t);
                 tGD.Genres = new List<GenreDTO>();
+                #pragma warning disable CS8602
                 foreach(TrackGenre trackGenre in t.TrackGenres){
                     tGD.Genres.Add(
                         _mapper.Map<GenreDTO>(_context.Genres.Find(trackGenre.GenreId))
                     );
                 }
+                #pragma warning restore CS8602
                 ltwgDTO.Add(tGD);
             });
             return ltwgDTO;
@@ -72,6 +74,10 @@ namespace MusicService.Services.Implementations
 
         public async Task PostTrack(TrackDTO tDTO)
         {
+            if (_context.Tracks.FirstOrDefault(t => t.TrackId == tDTO.TrackId) != null){
+                throw new AlreadyExistsException(nameof(Track), tDTO.TrackId);
+            }
+            
             _context.Tracks.Add(_mapper.Map<Track>(tDTO));
             await _context.SaveChangesAsync();
         }
@@ -95,12 +101,14 @@ namespace MusicService.Services.Implementations
                     lGD.ForEach(async gDTO => {
                         Genre? g = await _context.Genres.FindAsync(gDTO.GenreId);
                         #pragma warning disable CS8601
-                        _context.TrackGenres.Add(new TrackGenre {
-                            GenreId = gDTO.GenreId,
-                            Genre = g,
-                            TrackId = id,
-                            Track = t
-                        });
+                        if (_context.TrackGenres.FirstOrDefault(tg => tg.TrackId == id && tg.GenreId == gDTO.GenreId) == null){
+                            _context.TrackGenres.Add(new TrackGenre {
+                                GenreId = gDTO.GenreId,
+                                Genre = g,
+                                TrackId = id,
+                                Track = t
+                            });
+                        }
                         #pragma warning disable CS8601
                     });
                     await _context.SaveChangesAsync();

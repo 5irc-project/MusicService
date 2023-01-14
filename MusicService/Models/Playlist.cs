@@ -9,6 +9,6 @@ namespace MusicService.Models
         public int KindId { get; set; }
         public Kind Kind { get; set; } = null!;
         public string? PlaylistName { get; set; }
-        public virtual ICollection<PlaylistTrack> PlaylistTracks { get; set; } = null!;
+        public virtual ICollection<PlaylistTrack>? PlaylistTracks { get; set; }
     }
 }

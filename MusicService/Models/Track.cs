@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace MusicService.Models
 {
     public class Track
@@ -20,7 +17,7 @@ namespace MusicService.Models
         public float? Loudness { get; set; }
         public float? Speechiness { get; set; }
         public float? Valence { get; set; }
-        public virtual ICollection<TrackGenre> TrackGenres { get; set; } = null!;
+        public virtual ICollection<TrackGenre>? TrackGenres { get; set; }
         public virtual ICollection<PlaylistTrack>? PlaylistTracks { get; set; }
     }
 }

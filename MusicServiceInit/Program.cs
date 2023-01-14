@@ -11,22 +11,30 @@ namespace MusicServiceInit
         private static MusicServiceDBContext? _context;
         static void Main(string[] args)
         {
+            #pragma warning disable CS8602
             var services = new ServiceCollection();
             services.AddDbContext<MusicServiceDBContext>(opt => opt.UseNpgsql("Server=localhost;port=8003;Database=MusicServiceDatabase;uid=root;password=root;"));
 
             var serviceProvider = services.BuildServiceProvider();
             _context = serviceProvider.GetService<MusicServiceDBContext>();
 
-            var dataFromCSV = extractDataFromCSV();
-            List<Genre> listGenreToAdd = dataFromCSV.Item1;
-            List<Track> listTrackToAdd = dataFromCSV.Item2;
-            List<TrackGenre> listTrackGenreToAdd = dataFromCSV.Item3;
+            if (_context.Genres.ToList().Count == 0 && _context.Tracks.ToList().Count == 0 && _context.Kinds.ToList().Count == 0) {
+                var dataFromCSV = extractDataFromCSV();
+                List<Genre> listGenreToAdd = dataFromCSV.Item1;
+                List<Track> listTrackToAdd = dataFromCSV.Item2;
+                List<TrackGenre> listTrackGenreToAdd = dataFromCSV.Item3;
 
-            _context.AddRange(listGenreToAdd);
-            _context.AddRange(listTrackToAdd);
-            _context.AddRange(listTrackGenreToAdd);
+                _context.Genres.AddRange(listGenreToAdd);
+                _context.Tracks.AddRange(listTrackToAdd);
+                _context.TrackGenres.AddRange(listTrackGenreToAdd);
+                _context.Kinds.AddRange(new List<Kind> {
+                    new Kind { KindId = 1, Name = "Generated"},
+                    new Kind { KindId = 2, Name = "Manual" }
+                });
 
-            _context.SaveChanges();
+                _context.SaveChanges();
+                #pragma warning restore CS8602
+            }
         }
 
         private static (List<Genre>, List<Track>, List<TrackGenre>) extractDataFromCSV(){
@@ -42,6 +50,16 @@ namespace MusicServiceInit
                     if (line != null)
                     {
                         var values = Regex.Split(line, ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+                        
+
+                        for (int k =0; k < values.Length; k++){
+                            if (values[k].Contains('"') || values[k].Contains('\\')){
+                                values[k] = values[k].Replace('"', ' ');
+                                values[k] = values[k].Replace('\\', ' ');
+                                values[k] = values[k].Trim();
+                            }
+                        }
+
                         try
                         {
                             Track t = new Track {
@@ -70,12 +88,14 @@ namespace MusicServiceInit
                                 i++;
                             }
 
+                            #pragma warning disable CS8602, CS8601
                             TrackGenre trackGenre = new TrackGenre {
                                 Genre = listGenre.Find(g => g.Name == values[17]),
                                 GenreId = listGenre.Find(g => g.Name == values[17]).GenreId,
                                 Track = t,
                                 TrackId = t.TrackId
                             };
+                            #pragma warning restore CS8602, CS8601
 
                             listTrack.Add(t);
                             listTrackGenre.Add(trackGenre);

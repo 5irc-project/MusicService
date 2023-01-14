@@ -3,7 +3,6 @@ using MusicService.Models;
 using MusicService.Helpers;
 using MusicService.Services.Interfaces;
 using MusicService.Services.Implementations;
-using MusicService.Setup;
 
 var builder = WebApplication.CreateBuilder(args);
 

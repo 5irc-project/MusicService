@@ -28,7 +28,7 @@ namespace MusicService.Controllers
         public async Task<ActionResult<TrackWithGenresDTO?>> GetTrack(int id)
         {
             var twgDTO = await _service.GetTrack(id);
-            return twgDTO == null ? NotFound() : twgDTO;
+            return twgDTO == null ? NotFound(string.Format("No Track with ID = {0}", id)) : twgDTO;
         }
 
         // PUT: api/Track/5
@@ -42,8 +42,8 @@ namespace MusicService.Controllers
             
             try{
                 await _service.PutTrack(id, tDTO);
-            }catch(NotFoundException){
-                return NotFound();
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
             }
     
             return NoContent();
@@ -53,7 +53,12 @@ namespace MusicService.Controllers
         [HttpPost]
         public async Task<ActionResult<TrackWithGenresDTO>> PostTrack(TrackDTO tDTO)
         {
-            await _service.PostTrack(tDTO);
+            try{
+                await _service.PostTrack(tDTO);
+            }catch(AlreadyExistsException e){
+                return BadRequest(e.Content);
+            }
+
             return CreatedAtAction("GetTrack", new { id = tDTO.TrackId }, tDTO);
         }
 
@@ -63,8 +68,8 @@ namespace MusicService.Controllers
         {
             try{
                 await _service.PostTrackWithGenres(twgDTO);
-            }catch(NotFoundException){
-                return NotFound();
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
             }
 
             return CreatedAtAction("GetTrack", new { id = twgDTO.TrackId }, twgDTO);
@@ -76,8 +81,8 @@ namespace MusicService.Controllers
         {
             try{
                 await _service.DeleteTrack(id);
-            }catch (NotFoundException){
-                return NotFound();
+            }catch (NotFoundException e){
+                return NotFound(e.Content);
             }
             
             return NoContent();
@@ -89,8 +94,8 @@ namespace MusicService.Controllers
         {
             try{
                 await _service.AddGenresToTrack(id, lGD);
-            }catch(NotFoundException){
-                return NotFound();
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
             }
             return NoContent();
         }
@@ -101,8 +106,8 @@ namespace MusicService.Controllers
         {
             try{
                 await _service.RemoveGenresFromTrack(id, lGD);
-            }catch(NotFoundException){
-                return NotFound();
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
             }
             return NoContent();
         }

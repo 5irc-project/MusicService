@@ -41,13 +41,13 @@ namespace MusicService.Services.Implementations
             }
             PlaylistWithTracksDTO pwtDTO = _mapper.Map<PlaylistWithTracksDTO>(p);
             pwtDTO.Tracks = new List<TrackDTO>();
-            #pragma warning disable CS8604
+            #pragma warning disable CS8602
             foreach(PlaylistTrack playlistTrack in p.PlaylistTracks){
                 pwtDTO.Tracks.Add(
                     _mapper.Map<TrackDTO>(_context.Tracks.Find(playlistTrack.TrackId))
                 );
             }
-            #pragma warning restore CS8601  
+            #pragma warning restore CS8602  
             return pwtDTO;
         }
 
@@ -61,13 +61,13 @@ namespace MusicService.Services.Implementations
             lP.ForEach(p => {
                 PlaylistWithTracksDTO pwtDTO = _mapper.Map<PlaylistWithTracksDTO>(p);
                 pwtDTO.Tracks = new List<TrackDTO>();
-                #pragma warning disable CS8604
+                #pragma warning disable CS8602
                 foreach(PlaylistTrack playlistTrack in p.PlaylistTracks){
                     pwtDTO.Tracks.Add(
                         _mapper.Map<TrackDTO>(_context.Tracks.Find(playlistTrack.TrackId))
                     );
                 }
-                #pragma warning restore CS8601 
+                #pragma warning restore CS8602
                 lpwtDTO.Add(pwtDTO);
 
             });
@@ -76,6 +76,10 @@ namespace MusicService.Services.Implementations
 
         public async Task PostPlaylist(PlaylistDTO pDTO)
         {
+            if (_context.Playlists.FirstOrDefault(p => p.PlaylistId == pDTO.PlaylistId) != null){
+                throw new AlreadyExistsException(nameof(Playlist), pDTO.PlaylistId);
+            }
+
             _context.Playlists.Add(_mapper.Map<Playlist>(pDTO));
             await _context.SaveChangesAsync();
         }
@@ -99,12 +103,14 @@ namespace MusicService.Services.Implementations
                     lTD.ForEach(async tDTO => {
                         Track? t = await _context.Tracks.FindAsync(tDTO.TrackId);
                         #pragma warning disable CS8601
-                        _context.PlaylistTracks.Add(new PlaylistTrack {
-                            TrackId = tDTO.TrackId,
-                            Track = t,
-                            PlaylistId = id,
-                            Playlist = p
-                        });
+                        if (_context.PlaylistTracks.FirstOrDefault(pt => pt.PlaylistId == id && pt.TrackId == tDTO.TrackId) == null){
+                            _context.PlaylistTracks.Add(new PlaylistTrack {
+                                TrackId = tDTO.TrackId,
+                                Track = t,
+                                PlaylistId = id,
+                                Playlist = p
+                            });
+                        }
                         #pragma warning restore CS8601
                     });
                     await _context.SaveChangesAsync();

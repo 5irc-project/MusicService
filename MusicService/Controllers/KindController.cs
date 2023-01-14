@@ -28,7 +28,7 @@ namespace MusicService.Controllers
         public async Task<ActionResult<KindDTO>> GetKind(int id)
         {
             var kDTO = await _service.GetKind(id);
-            return kDTO == null ? NotFound() : kDTO;
+            return kDTO == null ? NotFound(string.Format("No Kind found with ID = {0}", id)) : kDTO;
         }
 
         // PUT: api/Kind/5
@@ -42,8 +42,8 @@ namespace MusicService.Controllers
             
             try{
                 await _service.PutKind(id, kDTO);
-            }catch(NotFoundException){
-                return NotFound();
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
             }
     
             return NoContent();
@@ -54,7 +54,11 @@ namespace MusicService.Controllers
         [HttpPost]
         public async Task<ActionResult<KindDTO>> PostKind(KindDTO kDTO)
         {
-            await _service.PostKind(kDTO);
+            try{
+                await _service.PostKind(kDTO);
+            }catch(AlreadyExistsException e){
+                return BadRequest(e.Content);
+            }
             return CreatedAtAction("GetKind", new { id = kDTO.KindId }, kDTO);
         }
 
@@ -64,8 +68,8 @@ namespace MusicService.Controllers
         {
             try{
                 await _service.DeleteKind(id);
-            }catch (NotFoundException){
-                return NotFound();
+            }catch (NotFoundException e){
+                return NotFound(e.Content);
             }
 
             return NoContent();

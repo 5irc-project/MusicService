@@ -41,6 +41,10 @@ namespace MusicService.Services.Implementations
 
         public async Task PostGenre(GenreDTO gDTO)
         {
+            if (_context.Genres.FirstOrDefault(g => g.GenreId == gDTO.GenreId) != null){
+                throw new AlreadyExistsException(nameof(Genre), gDTO.Name);
+            }
+
             _context.Genres.Add(_mapper.Map<Genre>(gDTO));
             await _context.SaveChangesAsync();   
         }

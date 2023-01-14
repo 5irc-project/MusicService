@@ -28,7 +28,7 @@ namespace MusicService.Controllers
         public async Task<ActionResult<GenreDTO>> GetGenre(int id)
         {
             var gDTO = await _service.GetGenre(id);
-            return gDTO == null ? NotFound() : gDTO;
+            return gDTO == null ? NotFound(string.Format("No genre with ID = {0}", id)) : gDTO;
         }
 
         // PUT: api/Genre/5
@@ -42,8 +42,8 @@ namespace MusicService.Controllers
             
             try{
                 await _service.PutGenre(id, gDTO);
-            }catch(NotFoundException){
-                return NotFound();
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
             }
     
             return NoContent();
@@ -54,7 +54,12 @@ namespace MusicService.Controllers
         [HttpPost]
         public async Task<ActionResult<GenreDTO>> PostGenre(GenreDTO gDTO)
         {
-            await _service.PostGenre(gDTO);
+            try{
+                await _service.PostGenre(gDTO);
+            }catch(AlreadyExistsException e){
+                return BadRequest(e.Content);
+            }
+
             return CreatedAtAction("GetGenre", new { id = gDTO.GenreId }, gDTO);
         }
 
@@ -64,8 +69,8 @@ namespace MusicService.Controllers
         {
             try{
                 await _service.DeleteGenre(id);
-            }catch (NotFoundException){
-                return NotFound();
+            }catch (NotFoundException e){
+                return NotFound(e.Content);
             }
 
             return NoContent();

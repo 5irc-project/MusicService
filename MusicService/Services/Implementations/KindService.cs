@@ -41,6 +41,10 @@ namespace MusicService.Services.Implementations
 
         public async Task PostKind(KindDTO kDTO)
         {
+            if (_context.Kinds.FirstOrDefault(k => k.KindId == kDTO.KindId) != null){
+                throw new AlreadyExistsException(nameof(Kind), kDTO.Name);
+            }
+
             _context.Kinds.Add(_mapper.Map<Kind>(kDTO));
             await _context.SaveChangesAsync();
         }

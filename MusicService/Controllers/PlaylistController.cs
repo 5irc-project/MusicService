@@ -28,7 +28,7 @@ namespace MusicService.Controllers
         public async Task<ActionResult<PlaylistWithTracksDTO>> GetPlaylist(int id)
         {
             var pwtDTO = await _service.GetPlaylist(id);
-            return pwtDTO == null ? NotFound() : pwtDTO;
+            return pwtDTO == null ? NotFound(string.Format("No Playlist found with ID = {0}", id)) : pwtDTO;
         }
 
         // PUT: api/Playlist/5
@@ -42,8 +42,8 @@ namespace MusicService.Controllers
             
             try{
                 await _service.PutPlaylist(id, pDTO);
-            }catch(NotFoundException){
-                return NotFound();
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
             }
     
             return NoContent();
@@ -54,7 +54,11 @@ namespace MusicService.Controllers
         [HttpPost]
         public async Task<ActionResult<PlaylistDTO>> PostPlaylist(PlaylistDTO pDTO)
         {
-            await _service.PostPlaylist(pDTO);
+            try{
+                await _service.PostPlaylist(pDTO);
+            }catch(AlreadyExistsException e){
+                return BadRequest(e.Content);
+            }
             return CreatedAtAction("GetPlaylist", new { id = pDTO.PlaylistId }, pDTO);
         }
 
@@ -64,8 +68,8 @@ namespace MusicService.Controllers
         {
             try{
                 await _service.DeletePlaylist(id);
-            }catch (NotFoundException){
-                return NotFound();
+            }catch (NotFoundException e){
+                return NotFound(e.Content);
             }
             
             return NoContent();
@@ -77,8 +81,8 @@ namespace MusicService.Controllers
         {
             try{
                 await _service.AddTracksToPlaylist(id, lTD);
-            }catch(NotFoundException){
-                return NotFound();
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
             }
 
             return NoContent();
@@ -90,8 +94,8 @@ namespace MusicService.Controllers
         {
             try{
                 await _service.RemoveTracksFromPlaylist(id, lTD);
-            }catch(NotFoundException){
-                return NotFound();
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
             }
 
             return NoContent();
