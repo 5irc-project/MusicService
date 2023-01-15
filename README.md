@@ -8,3 +8,15 @@ En fait jpense faut faire un entitystate modified ou qq chose comme ça jsais pa
 Aussi ptet virer les musiques ac artistaName = empty_field ?
 Faire les tests
 
+Possible pb avec les tests => le sequenceEqual prend en compte l'ordre de retour (je crois), donc c potentiellement dla merde
+
+Attention sur les tests, faut faire gaffe aux AreEqual ça use la reference des fois (voir PostGenre les tests pr un truc ok)
+
+TODO :
+
+Add constructor for Track & other DTOs for easier testing ? (see every test)
+Add mapping from Tracks to TrackWithGenresDTO for Genres ? (see test TrackController, PostTrackWithGenres_ReturnsOk);
+Add mapping from TrackWithGenresDTO to TrackDTO ? (see GetTrack_ReturnsOk)
+Can't test cascade deletes, not supported InMemory (or mock)
+Return message that states what happened when adding / removing genres ? (yes)
+Make Name value for Genre / Kind nullable maybe, it's annoying otherwise (dunno)

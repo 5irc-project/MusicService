@@ -73,6 +73,8 @@ namespace MusicService.Controllers
                 await _service.PostTrackWithGenres(twgDTO);
             }catch(NotFoundException e){
                 return NotFound(e.Content);
+            }catch(AlreadyExistsException e){
+                return BadRequest(e.Content);
             }
 
             return CreatedAtAction("GetTrack", new { id = twgDTO.TrackId }, twgDTO);

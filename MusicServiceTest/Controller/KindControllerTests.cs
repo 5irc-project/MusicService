@@ -73,7 +73,7 @@ namespace MusicServiceTest.Service
             // Act
             _context.Kinds.Add(_mapper.Map<Kind>(kindToAdd));
             _context.SaveChanges();
-            KindDTO kindToTest = _controller.GetKind(-1).Result.Value;
+            KindDTO kindToTest = _controller.GetKind(kindToAdd.KindId).Result.Value;
 
             // Assert
             Assert.IsInstanceOfType(kindToTest, typeof(KindDTO));
@@ -111,7 +111,7 @@ namespace MusicServiceTest.Service
 
             // Assert
             Assert.IsInstanceOfType(actionToTest, typeof(NoContentResult));
-            Assert.AreEqual(_context.Kinds.Find(-2).Name, kindToPut.Name);         
+            Assert.AreEqual(_context.Kinds.Find(kindToPut.KindId).Name, kindToPut.Name);         
         }
 
         [TestMethod()]
@@ -156,10 +156,11 @@ namespace MusicServiceTest.Service
             };
 
             // Act
-            var kindCreated = (CreatedAtActionResult)_controller.PostKind(kindToPost).Result.Result;
+            var actionToTest = _controller.PostKind(kindToPost).Result.Result;
 
             // Assert
-            Assert.AreEqual(kindCreated.Value, kindToPost);        
+            Assert.IsInstanceOfType(actionToTest, typeof(CreatedAtActionResult));
+            Assert.AreEqual(_mapper.Map<KindDTO>(_context.Kinds.Find(kindToPost.KindId)), kindToPost);        
         }
 
         [TestMethod()]
@@ -219,10 +220,10 @@ namespace MusicServiceTest.Service
             _context.Kinds.Add(_mapper.Map<Kind>(kindToAdd));
             _context.SaveChanges();
             _context.ChangeTracker.Clear();
-            var actionToTest = _controller.DeleteKind(-6).Result;
+            var actionToTest = _controller.DeleteKind(kindToAdd.KindId).Result;
             // Assert
             Assert.IsInstanceOfType(actionToTest, typeof(NoContentResult));
-            Assert.AreEqual(_context.Kinds.Find(-6), null);  
+            Assert.AreEqual(_context.Kinds.Find(kindToAdd.KindId), null);  
         }
 
         [TestMethod()]

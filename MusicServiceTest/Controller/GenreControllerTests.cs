@@ -73,7 +73,7 @@ namespace MusicServiceTest.Service
             // Act
             _context.Genres.Add(_mapper.Map<Genre>(genreToAdd));
             _context.SaveChanges();
-            GenreDTO genreToTest = _controller.GetGenre(-1).Result.Value;
+            GenreDTO genreToTest = _controller.GetGenre(genreToAdd.GenreId).Result.Value;
 
             // Assert
             Assert.IsInstanceOfType(genreToTest, typeof(GenreDTO));
@@ -111,7 +111,7 @@ namespace MusicServiceTest.Service
 
             // Assert
             Assert.IsInstanceOfType(actionToTest, typeof(NoContentResult));
-            Assert.AreEqual(_context.Genres.Find(-2).Name, genreToPut.Name);         
+            Assert.AreEqual(_context.Genres.Find(genreToPut.GenreId).Name, genreToPut.Name);         
         }
 
         [TestMethod()]
@@ -156,10 +156,11 @@ namespace MusicServiceTest.Service
             };
 
             // Act
-            var genreCreated = (CreatedAtActionResult)_controller.PostGenre(genreToPost).Result.Result;
+            var actionToTest = _controller.PostGenre(genreToPost).Result.Result;
 
             // Assert
-            Assert.AreEqual(genreCreated.Value, genreToPost);        
+            Assert.IsInstanceOfType(actionToTest, typeof(CreatedAtActionResult));
+            Assert.AreEqual(_mapper.Map<GenreDTO>(_context.Genres.Find(genreToPost.GenreId)), genreToPost);        
         }
 
         [TestMethod()]
@@ -219,10 +220,10 @@ namespace MusicServiceTest.Service
             _context.Genres.Add(_mapper.Map<Genre>(genreToAdd));
             _context.SaveChanges();
             _context.ChangeTracker.Clear();
-            var actionToTest = _controller.DeleteGenre(-6).Result;
+            var actionToTest = _controller.DeleteGenre(genreToAdd.GenreId).Result;
             // Assert
             Assert.IsInstanceOfType(actionToTest, typeof(NoContentResult));
-            Assert.AreEqual(_context.Genres.Find(-6), null);  
+            Assert.AreEqual(_context.Genres.Find(genreToAdd.GenreId), null);  
         }
 
         [TestMethod()]

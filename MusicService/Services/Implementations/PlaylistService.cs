@@ -115,7 +115,7 @@ namespace MusicService.Services.Implementations
                     });
                     await _context.SaveChangesAsync();
                 }else{
-                    throw new NotFoundException("The given tracks couldn't be found");
+                    throw new NotFoundException(nameof(Track));
                 }
             }else{
                 throw new NotFoundException(id, nameof(Playlist));
@@ -137,7 +137,7 @@ namespace MusicService.Services.Implementations
                     await _context.SaveChangesAsync();
                     #pragma warning restore CS8604
                 }else{
-                        throw new NotFoundException("The given tracks couldn't be found");
+                        throw new NotFoundException(nameof(Track));
                 }
             }else{
                 throw new NotFoundException(id, nameof(Playlist));

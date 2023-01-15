@@ -113,7 +113,7 @@ namespace MusicService.Services.Implementations
                     });
                     await _context.SaveChangesAsync();
                 }else{
-                    throw new NotFoundException("The given genres couldn't be found");
+                    throw new NotFoundException(nameof(Genre));
                 }
             }else{
                 throw new NotFoundException(id, nameof(Track));
@@ -127,14 +127,16 @@ namespace MusicService.Services.Implementations
             // If every genre exists and the track isn't null
             if (t != null){
                 if (lGD.All(gDTO => _context.Genres.AsNoTracking().FirstOrDefault(g => g.GenreId == gDTO.GenreId) != null) == true && t != null){
-                    #pragma warning disable CS8604
+                    #pragma warning disable 
                     lGD.ForEach(gDTO => {
-                        _context.TrackGenres.Remove(_context.TrackGenres.FirstOrDefault(tg => (tg.GenreId == gDTO.GenreId && tg.TrackId == id)));
+                        if (_context.TrackGenres.FirstOrDefault(tg => (tg.GenreId == gDTO.GenreId && tg.TrackId == id)) != null){
+                            _context.TrackGenres.Remove(_context.TrackGenres.FirstOrDefault(tg => (tg.GenreId == gDTO.GenreId && tg.TrackId == id)));
+                        }
                     });
                     await _context.SaveChangesAsync();
                     #pragma warning restore CS8604
                 }else{
-                        throw new NotFoundException("The given genres couldn't be found");
+                        throw new NotFoundException(nameof(Genre));
                 }
             }else{
                 throw new NotFoundException(id, nameof(Track));
@@ -143,6 +145,9 @@ namespace MusicService.Services.Implementations
 
         public async Task PostTrackWithGenres(TrackWithGenresDTO twgDTO)
         {
+            if (_context.Tracks.AsNoTracking().FirstOrDefault(t => t.TrackId == twgDTO.TrackId) != null){
+                throw new AlreadyExistsException(nameof(Track), twgDTO.TrackId);
+            }
             List<GenreDTO> lgDTO = twgDTO.Genres.ToList<GenreDTO>();
             if (lgDTO.All(gDTO => _context.Genres.AsNoTracking().FirstOrDefault(g => g.GenreId == gDTO.GenreId) != null) == true){
                 Track t = _mapper.Map<Track>(twgDTO);
@@ -160,7 +165,7 @@ namespace MusicService.Services.Implementations
                 _context.Tracks.Add(t);
                 await _context.SaveChangesAsync();
             }else{
-                throw new NotFoundException("The given genres couldn't be found");
+                throw new NotFoundException(nameof(Genre));
             }
         }
     }
