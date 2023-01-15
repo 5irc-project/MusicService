@@ -29,7 +29,7 @@ namespace MusicService.Services.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PlaylistWithTracksDTO?> GetPlaylist(int id)
+        public async Task<PlaylistWithTracksDTO> GetPlaylist(int id)
         {
             Playlist? p = await _context.Playlists
             .Include(p => p.Kind)
@@ -37,7 +37,7 @@ namespace MusicService.Services.Implementations
             .FirstOrDefaultAsync(p => p.PlaylistId == id);
 
             if (p == null){
-                return null;
+                throw new NotFoundException(id, nameof(Playlist));
             }
             PlaylistWithTracksDTO pwtDTO = _mapper.Map<PlaylistWithTracksDTO>(p);
             pwtDTO.Tracks = new List<TrackDTO>();
@@ -86,11 +86,11 @@ namespace MusicService.Services.Implementations
 
         public async Task PutPlaylist(int id, PlaylistDTO pDTO)
         {
-            _context.Entry(_mapper.Map<Playlist>(pDTO)).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
             if (!_context.Playlists.Any(e => e.PlaylistId == id)){
                     throw new NotFoundException(id, nameof(Playlist));
             }
+            _context.Entry(_mapper.Map<Playlist>(pDTO)).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
         public async Task AddTracksToPlaylist(int id, List<TrackDTO> lTD)

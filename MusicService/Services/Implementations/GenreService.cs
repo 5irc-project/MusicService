@@ -31,7 +31,11 @@ namespace MusicService.Services.Implementations
 
         public async Task<GenreDTO> GetGenre(int id)
         {
-            return _mapper.Map<GenreDTO>(await _context.Genres.FindAsync(id));
+            var genreFound = _mapper.Map<GenreDTO>(await _context.Genres.FindAsync(id));
+            if (genreFound == null){
+                throw new NotFoundException(id, nameof(Genre));
+            }
+            return genreFound;
         }
 
         public async Task<List<GenreDTO>> GetGenres()
@@ -42,20 +46,22 @@ namespace MusicService.Services.Implementations
         public async Task PostGenre(GenreDTO gDTO)
         {
             if (_context.Genres.FirstOrDefault(g => g.GenreId == gDTO.GenreId) != null){
+                throw new AlreadyExistsException(nameof(Genre), gDTO.GenreId);
+            }else if (_context.Genres.FirstOrDefault(g => g.Name == gDTO.Name) != null){
                 throw new AlreadyExistsException(nameof(Genre), gDTO.Name);
             }
-
+            
             _context.Genres.Add(_mapper.Map<Genre>(gDTO));
             await _context.SaveChangesAsync();   
         }
 
         public async Task PutGenre(int id, GenreDTO gDTO)
         {
-            _context.Entry(_mapper.Map<Genre>(gDTO)).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
             if (!_context.Genres.Any(e => e.GenreId == id)){
                 throw new NotFoundException(id, nameof(Genre));
             }
+            _context.Entry(_mapper.Map<Genre>(gDTO)).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }

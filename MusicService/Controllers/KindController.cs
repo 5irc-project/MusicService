@@ -27,8 +27,11 @@ namespace MusicService.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<KindDTO>> GetKind(int id)
         {
-            var kDTO = await _service.GetKind(id);
-            return kDTO == null ? NotFound(string.Format("No Kind found with ID = {0}", id)) : kDTO;
+            try{
+                return await _service.GetKind(id);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
         }
 
         // PUT: api/Kind/5

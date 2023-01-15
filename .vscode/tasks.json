@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/MusicServiceTest/MusicServiceTest.csproj",
+                "${workspaceFolder}/MusicService/MusicService.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/MusicServiceTest/MusicServiceTest.csproj",
+                "${workspaceFolder}/MusicService/MusicService.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/MusicServiceTest/MusicServiceTest.csproj"
+                "${workspaceFolder}/MusicService/MusicService.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

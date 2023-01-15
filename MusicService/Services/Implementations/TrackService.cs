@@ -29,14 +29,14 @@ namespace MusicService.Services.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public async Task<TrackWithGenresDTO?> GetTrack(int id)
+        public async Task<TrackWithGenresDTO> GetTrack(int id)
         {
             Track? t = await _context.Tracks
                 .Include(t => t.TrackGenres)
                 .FirstOrDefaultAsync(t => t.TrackId == id);
 
             if (t == null){
-                return null;
+                throw new NotFoundException(id, nameof(Track));
             }
             
             TrackWithGenresDTO twgDTO = _mapper.Map<TrackWithGenresDTO>(t);
@@ -84,11 +84,11 @@ namespace MusicService.Services.Implementations
 
         public async Task PutTrack(int id, TrackDTO tDTO)
         {
-            _context.Entry(_mapper.Map<Track>(tDTO)).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
             if (!_context.Tracks.Any(e => e.TrackId == id)){
                     throw new NotFoundException(id, nameof(Track));
             }
+            _context.Entry(_mapper.Map<Track>(tDTO)).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
         public async Task AddGenresToTrack(int id, List<GenreDTO> lGD)

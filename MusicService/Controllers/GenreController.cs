@@ -27,8 +27,11 @@ namespace MusicService.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GenreDTO>> GetGenre(int id)
         {
-            var gDTO = await _service.GetGenre(id);
-            return gDTO == null ? NotFound(string.Format("No genre with ID = {0}", id)) : gDTO;
+            try{
+                return await _service.GetGenre(id);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
         }
 
         // PUT: api/Genre/5

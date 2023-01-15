@@ -5,7 +5,7 @@ namespace MusicService.Services.Interfaces
     public interface ITrackService
     {
         Task<List<TrackWithGenresDTO>> GetTracks();
-        Task<TrackWithGenresDTO?> GetTrack(int id);
+        Task<TrackWithGenresDTO> GetTrack(int id);
         Task PutTrack(int id, TrackDTO tDTO);
         Task PostTrack(TrackDTO tDTO);
         Task PostTrackWithGenres(TrackWithGenresDTO twgDTO);

@@ -27,8 +27,11 @@ namespace MusicService.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PlaylistWithTracksDTO>> GetPlaylist(int id)
         {
-            var pwtDTO = await _service.GetPlaylist(id);
-            return pwtDTO == null ? NotFound(string.Format("No Playlist found with ID = {0}", id)) : pwtDTO;
+            try{
+                return await _service.GetPlaylist(id);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
         }
 
         // PUT: api/Playlist/5

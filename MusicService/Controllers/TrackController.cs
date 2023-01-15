@@ -27,8 +27,11 @@ namespace MusicService.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TrackWithGenresDTO?>> GetTrack(int id)
         {
-            var twgDTO = await _service.GetTrack(id);
-            return twgDTO == null ? NotFound(string.Format("No Track with ID = {0}", id)) : twgDTO;
+            try{
+                return await _service.GetTrack(id);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
         }
 
         // PUT: api/Track/5
