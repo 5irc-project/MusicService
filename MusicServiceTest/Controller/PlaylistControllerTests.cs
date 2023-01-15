@@ -145,6 +145,28 @@ namespace MusicServiceTest.Controller
         }
 
         [TestMethod()]
+        public void GetTrackByQueryName_ReturnsOk()
+        {
+            // Arrange
+            List<PlaylistDTO> listPlaylistToAdd = new List<PlaylistDTO>() {
+                new PlaylistDTO(){ PlaylistId = -101, KindId = 1, UserId = 0, PlaylistName = "PlaylistOne" },
+                new PlaylistDTO(){ PlaylistId = -102, KindId = 1, UserId = 0, PlaylistName = "PlaylistOne" },
+                new PlaylistDTO(){ PlaylistId = -103, KindId = 1, UserId = 1, PlaylistName = "PlaylistOne" },
+                new PlaylistDTO(){ PlaylistId = -104, KindId = 1, UserId = 0, PlaylistName = "PlaylistOne" }
+            };
+
+            // Act
+            listPlaylistToAdd.ForEach(playlistToAdd => {
+                _context.Playlists.Add(_mapper.Map<Playlist>(playlistToAdd));
+            });
+            _context.SaveChanges();
+            List<PlaylistWithTracksDTO> listPlaylistToTestWithTracks = _controller.GetPlaylistsByUser(0).Result.Value;
+
+            // Assert
+            Assert.AreEqual(listPlaylistToTestWithTracks.Count, 3);
+        }
+
+        [TestMethod()]
         public void PutPlaylist_ReturnsOk()
         {
             // Arrange

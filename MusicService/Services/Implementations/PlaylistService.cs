@@ -32,9 +32,9 @@ namespace MusicService.Services.Implementations
         public async Task<PlaylistWithTracksDTO> GetPlaylist(int id)
         {
             Playlist? p = await _context.Playlists
-            .Include(p => p.Kind)
-            .Include(p => p.PlaylistTracks)
-            .FirstOrDefaultAsync(p => p.PlaylistId == id);
+                .Include(p => p.Kind)
+                .Include(p => p.PlaylistTracks)
+                .FirstOrDefaultAsync(p => p.PlaylistId == id);
 
             if (p == null){
                 throw new NotFoundException(id, nameof(Playlist));
@@ -49,6 +49,30 @@ namespace MusicService.Services.Implementations
             }
             #pragma warning restore CS8602  
             return pwtDTO;
+        }
+
+        public async Task<List<PlaylistWithTracksDTO>> GetPlaylistsByUser(int userId)
+        {
+            List<Playlist>? listPlaylist = await _context.Playlists
+                .Include(p => p.Kind)
+                .Include(p => p.PlaylistTracks)
+                .Where(p => p.UserId == userId)
+                .ToListAsync();
+            List<PlaylistWithTracksDTO> listPlaylistWithTrack = new List<PlaylistWithTracksDTO>();
+
+            listPlaylist.ForEach(p => {
+                PlaylistWithTracksDTO pwtDTO = _mapper.Map<PlaylistWithTracksDTO>(p);
+                pwtDTO.Tracks = new List<TrackDTO>();
+                #pragma warning disable CS8602
+                foreach(PlaylistTrack playlistTrack in p.PlaylistTracks){
+                    pwtDTO.Tracks.Add(
+                        _mapper.Map<TrackDTO>(_context.Tracks.Find(playlistTrack.TrackId))
+                    );
+                }
+                #pragma warning restore CS8602  
+                listPlaylistWithTrack.Add(pwtDTO);
+            });
+            return listPlaylistWithTrack;
         }
 
         public async Task<List<PlaylistWithTracksDTO>> GetPlaylists()

@@ -34,6 +34,13 @@ namespace MusicService.Controllers
             }
         }
 
+        // GET: api/Playlist/User/5
+        [HttpGet("User/{userId}")]
+        public async Task<ActionResult<List<PlaylistWithTracksDTO>>> GetPlaylistsByUser(int userId)
+        {
+            return await _service.GetPlaylistsByUser(userId);
+        }
+
         // PUT: api/Playlist/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

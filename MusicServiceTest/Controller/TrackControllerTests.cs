@@ -125,6 +125,28 @@ namespace MusicServiceTest.Controller
         }
 
         [TestMethod()]
+        public void GetTrackByQueryName_ReturnsOk()
+        {
+            // Arrange
+            List<TrackDTO> listTrackToAdd = new List<TrackDTO>() {
+                new TrackDTO { TrackId = -101,  Acousticness = (float)0.1, ArtistName = "ArtistNameOne", Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "TrackNameOne", Valence = (float)0.1},
+                new TrackDTO { TrackId = -102,  Acousticness = (float)0.1, ArtistName = "ArtistNameOne", Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "TrackNameOne", Valence = (float)0.1},
+                new TrackDTO { TrackId = -103,  Acousticness = (float)0.1, ArtistName = "ArtistNameOne", Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "TrackNameOne", Valence = (float)0.1},
+                new TrackDTO { TrackId = -104,  Acousticness = (float)0.1, ArtistName = "ArtistNameOne", Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "Bonjour", Valence = (float)0.1},
+            };
+
+            // Act
+            listTrackToAdd.ForEach(trackToAdd => {
+                _context.Tracks.Add(_mapper.Map<Track>(trackToAdd));
+            });
+            _context.SaveChanges();
+            List<TrackWithGenresDTO> listTrackToTestWithGenres = _controller.GetTrackByNameQuery("Track").Result.Value;
+
+            // Assert
+            Assert.AreEqual(listTrackToTestWithGenres.Count, 3);
+        }
+
+        [TestMethod()]
         public void PutTrack_ReturnsOk()
         {
             // Arrange

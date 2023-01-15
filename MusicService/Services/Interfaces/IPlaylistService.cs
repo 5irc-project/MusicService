@@ -6,6 +6,7 @@ namespace MusicService.Services.Interfaces
     {
         Task<List<PlaylistWithTracksDTO>> GetPlaylists();
         Task<PlaylistWithTracksDTO> GetPlaylist(int id);
+        Task<List<PlaylistWithTracksDTO>> GetPlaylistsByUser(int userId);
         Task PutPlaylist(int id, PlaylistDTO ppDTO);
         Task PostPlaylist(PlaylistDTO pDTO);
         Task DeletePlaylist(int id);

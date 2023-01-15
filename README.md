@@ -17,6 +17,7 @@ TODO :
 Add constructor for Track & other DTOs for easier testing ? (see every test)
 Add mapping from Tracks to TrackWithGenresDTO for Genres ? (see test TrackController, PostTrackWithGenres_ReturnsOk);
 Add mapping from TrackWithGenresDTO to TrackDTO ? (see GetTrack_ReturnsOk)
-Can't test cascade deletes, not supported InMemory (or mock)
+Can't test cascade deletes, not supported InMemory (or mock), and also apprently can't test foreign keys ?
 Return message that states what happened when adding / removing genres ? (yes)
 Make Name value for Genre / Kind nullable maybe, it's annoying otherwise (dunno)
+Add Check for user with playlist

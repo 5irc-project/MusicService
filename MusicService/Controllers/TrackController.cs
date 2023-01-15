@@ -34,6 +34,13 @@ namespace MusicService.Controllers
             }
         }
 
+        // GET: api/Track/NameQuery/"ex"
+        [HttpGet("NameQuery/{nameQuery}")]
+        public async Task<ActionResult<List<TrackWithGenresDTO>>> GetTrackByNameQuery(string nameQuery)
+        {
+            return await _service.GetTracksByNameQuery(nameQuery);
+        }
+
         // PUT: api/Track/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

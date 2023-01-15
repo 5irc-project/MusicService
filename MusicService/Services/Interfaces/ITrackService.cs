@@ -6,6 +6,7 @@ namespace MusicService.Services.Interfaces
     {
         Task<List<TrackWithGenresDTO>> GetTracks();
         Task<TrackWithGenresDTO> GetTrack(int id);
+        Task<List<TrackWithGenresDTO>> GetTracksByNameQuery(string nameQuery);
         Task PutTrack(int id, TrackDTO tDTO);
         Task PostTrack(TrackDTO tDTO);
         Task PostTrackWithGenres(TrackWithGenresDTO twgDTO);

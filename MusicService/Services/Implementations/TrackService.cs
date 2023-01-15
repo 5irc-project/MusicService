@@ -51,6 +51,31 @@ namespace MusicService.Services.Implementations
             return twgDTO;
         }
 
+        public async Task<List<TrackWithGenresDTO>> GetTracksByNameQuery(string nameQuery)
+        {
+            List<Track>? listTrack = await _context.Tracks
+                .Include(t => t.TrackGenres)
+                .Where(t => t.TrackName.ToLower().Contains(nameQuery.ToLower()))
+                .Take(50)
+                .ToListAsync();
+            List<TrackWithGenresDTO> listTracksWithGenre = new List<TrackWithGenresDTO>();
+
+            listTrack.ForEach(t => {
+                TrackWithGenresDTO twgDTO = _mapper.Map<TrackWithGenresDTO>(t);
+                twgDTO.Genres = new List<GenreDTO>();
+                #pragma warning disable CS8602
+                foreach(TrackGenre trackGenre in t.TrackGenres){
+                    twgDTO.Genres.Add(
+                        _mapper.Map<GenreDTO>(_context.Genres.Find(trackGenre.GenreId))
+                    );
+                }
+                #pragma warning restore CS8602
+                listTracksWithGenre.Add(twgDTO);
+            });
+            
+            return listTracksWithGenre;
+        }
+
         public async Task<List<TrackWithGenresDTO>> GetTracks()
         {
             List<Track> lT = await _context.Tracks
