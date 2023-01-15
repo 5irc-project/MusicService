@@ -9,5 +9,22 @@ namespace MusicService.DTOs
         public int KindId { get; set; }
         public string? PlaylistName { get; set; }
         public virtual ICollection<TrackDTO> Tracks { get; set; } = null!;
+
+        public override bool Equals(Object obj){
+            //Check for null and compare run-time types.
+            if ((obj == null) || ! this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else {
+                PlaylistWithTracksDTO p = (PlaylistWithTracksDTO) obj;
+                foreach(var track in p.Tracks){
+                    if (!Tracks.Contains(track)){
+                        return false;
+                    }
+                }
+                return (PlaylistId == p.PlaylistId) && (UserId == p.UserId) && (KindId == p.KindId) && (PlaylistName == p.PlaylistName);
+            }
+        }
     }
 }

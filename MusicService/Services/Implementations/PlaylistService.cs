@@ -132,7 +132,9 @@ namespace MusicService.Services.Implementations
                 if (lTD.All(tDTO => _context.Tracks.AsNoTracking().FirstOrDefault(t => t.TrackId == tDTO.TrackId) != null) == true && p != null){
                     #pragma warning disable CS8604
                     lTD.ForEach(tDTO => {
-                        _context.PlaylistTracks.Remove(_context.PlaylistTracks.FirstOrDefault(pt => (pt.TrackId == tDTO.TrackId && pt.PlaylistId == id)));
+                        if (_context.PlaylistTracks.FirstOrDefault(pt => (pt.TrackId == tDTO.TrackId && pt.PlaylistId == id)) != null){
+                            _context.PlaylistTracks.Remove(_context.PlaylistTracks.FirstOrDefault(pt => (pt.TrackId == tDTO.TrackId && pt.PlaylistId == id)));
+                        }
                     });
                     await _context.SaveChangesAsync();
                     #pragma warning restore CS8604

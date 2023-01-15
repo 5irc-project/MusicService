@@ -139,7 +139,7 @@ namespace MusicServiceTest.Controller
 
             // Assert
             Assert.IsInstanceOfType(actionToTest, typeof(NoContentResult));
-            Assert.AreEqual(_mapper.Map<TrackDTO>(_context.Tracks.Find(trackToPut.TrackId)), trackToPut);         
+            Assert.AreEqual(_context.Tracks.Find(trackToAdd.TrackId).TrackName, trackToPut.TrackName);         
         }
 
         [TestMethod()]

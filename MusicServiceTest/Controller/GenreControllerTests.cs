@@ -111,7 +111,7 @@ namespace MusicServiceTest.Service
 
             // Assert
             Assert.IsInstanceOfType(actionToTest, typeof(NoContentResult));
-            Assert.AreEqual(_context.Genres.Find(genreToPut.GenreId).Name, genreToPut.Name);         
+            Assert.AreEqual(_context.Genres.Find(genreToAdd.GenreId).Name, genreToPut.Name);
         }
 
         [TestMethod()]
