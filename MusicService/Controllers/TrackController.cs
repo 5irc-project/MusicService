@@ -34,6 +34,13 @@ namespace MusicService.Controllers
             }
         }
 
+        // GET: api/Track/Random
+        [HttpGet("Random")]
+        public async Task<ActionResult<TrackWithGenresDTO?>> GetRandomTrack()
+        {
+            return await _service.GetRandomTrack();
+        }
+
         // GET: api/Track/NameQuery/"ex"
         [HttpGet("NameQuery/{nameQuery}")]
         public async Task<ActionResult<List<TrackWithGenresDTO>>> GetTrackByNameQuery(string nameQuery)
