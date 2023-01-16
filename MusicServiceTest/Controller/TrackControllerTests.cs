@@ -28,8 +28,9 @@ namespace MusicServiceTest.Controller
 
             if (_context.Genres.Count() <= 0){
                 _context.Genres.AddRange(
-                    new Genre { GenreId = 1, Name = "GenreUn"},
-                    new Genre { GenreId = 2, Name = "GenreDeux"}
+                    new Genre { GenreId = 1, Name = "GenreUn" },
+                    new Genre { GenreId = 2, Name = "GenreDeux" },
+                    new Genre { GenreId = 100, Name = "GenreGetByGenre" }
 
                 );
                 _context.SaveChanges();
@@ -128,9 +129,9 @@ namespace MusicServiceTest.Controller
         {
             // Arrange
             List<TrackDTO> listTrackToAdd = new List<TrackDTO>() {
-                new TrackDTO { TrackId = -101,  Acousticness = (float)0.1, ArtistName = "ArtistNameOne", Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "TrackNameOne", Valence = (float)0.1},
-                new TrackDTO { TrackId = -102,  Acousticness = (float)0.1, ArtistName = "ArtistNameOne", Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "TrackNameOne", Valence = (float)0.1},
-                new TrackDTO { TrackId = -103,  Acousticness = (float)0.1, ArtistName = "ArtistNameOne", Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "TrackNameOne", Valence = (float)0.1},
+                new TrackDTO { TrackId = -101,  Acousticness = (float)0.1, ArtistName = "ArtistNameOne", Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "TestingAZE", Valence = (float)0.1},
+                new TrackDTO { TrackId = -102,  Acousticness = (float)0.1, ArtistName = "ArtistNameOne", Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "TestingAZEb", Valence = (float)0.1},
+                new TrackDTO { TrackId = -103,  Acousticness = (float)0.1, ArtistName = "ArtistNameOne", Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "TestingAZEc", Valence = (float)0.1},
                 new TrackDTO { TrackId = -104,  Acousticness = (float)0.1, ArtistName = "ArtistNameOne", Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "Bonjour", Valence = (float)0.1},
             };
 
@@ -139,7 +140,7 @@ namespace MusicServiceTest.Controller
                 _context.Tracks.Add(_mapper.Map<Track>(trackToAdd));
             });
             _context.SaveChanges();
-            List<TrackWithGenresDTO> listTrackToTestWithGenres = _controller.GetTracksByNameQuery("Track").Result.Value;
+            List<TrackWithGenresDTO> listTrackToTestWithGenres = _controller.GetTracksByNameQuery("TestingAZE").Result.Value;
 
             // Assert
             Assert.AreEqual(listTrackToTestWithGenres.Count, 3);
@@ -154,9 +155,9 @@ namespace MusicServiceTest.Controller
                 new TrackDTO { TrackId = -106,  Acousticness = (float)0.2, ArtistName = "ArtistNameTwo", Danceability = (float)0.2, DurationMs = (float)200, Energy = (float)0.2, Instrumentalness = (float)0.2, Key = "A", Liveness = (float)0.2, Loudness = (float)0.2, Popularity = (float)20, Speechiness =(float)0.2, Tempo = (float)0.2, TrackName = "TrackNameTwo", Valence = (float)0.2},
             };
             List<TrackGenre> listTrackGenreToAdd = new List<TrackGenre>() {
-                new TrackGenre { TrackId = listTrackToAdd[0].TrackId, GenreId = 1},
+                new TrackGenre { TrackId = listTrackToAdd[0].TrackId, GenreId = 100},
                 new TrackGenre { TrackId = listTrackToAdd[0].TrackId, GenreId = 2},
-                new TrackGenre { TrackId = listTrackToAdd[1].TrackId, GenreId = 1}
+                new TrackGenre { TrackId = listTrackToAdd[1].TrackId, GenreId = 100}
             };
 
             // Act
@@ -167,7 +168,7 @@ namespace MusicServiceTest.Controller
                 _context.TrackGenres.Add(trackGenreToAdd);
             });
             _context.SaveChanges();
-            List<TrackWithGenresDTO> listTrackToTestWithGenres = _controller.GetTracskByGenre(1).Result.Value;
+            List<TrackWithGenresDTO> listTrackToTestWithGenres = _controller.GetTracskByGenre(100).Result.Value;
 
             // Assert
             Assert.AreEqual(listTrackToTestWithGenres.Count, 2);
