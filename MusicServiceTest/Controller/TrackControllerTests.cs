@@ -89,6 +89,26 @@ namespace MusicServiceTest.Controller
         }
 
         [TestMethod()]
+        public void GetRandomTrack_ReturnsOk()
+        {
+            // Arrange
+            List<TrackDTO> listTrackToAdd = new List<TrackDTO>() {
+                new TrackDTO { TrackId = -200,  Acousticness = (float)0.1, ArtistName = "ArtistNameOne", Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "TrackNameOne", Valence = (float)0.1},
+                new TrackDTO { TrackId = -201,  Acousticness = (float)0.2, ArtistName = "ArtistNameTwo", Danceability = (float)0.2, DurationMs = (float)200, Energy = (float)0.2, Instrumentalness = (float)0.2, Key = "A", Liveness = (float)0.2, Loudness = (float)0.2, Popularity = (float)20, Speechiness =(float)0.2, Tempo = (float)0.2, TrackName = "TrackNameTwo", Valence = (float)0.2},
+            };
+
+            // Act
+            listTrackToAdd.ForEach(trackToAdd => {
+                _context.Tracks.Add(_mapper.Map<Track>(trackToAdd));
+            });
+            _context.SaveChanges();
+            var resultToTest = _controller.GetRandomTrack().Result.Value;
+
+            // Assert
+            Assert.IsInstanceOfType(resultToTest, typeof(TrackWithGenresDTO));
+        }
+
+        [TestMethod()]
         public void GetTrack_ReturnsOk()
         {
             // Arrange

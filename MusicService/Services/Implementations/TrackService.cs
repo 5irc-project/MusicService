@@ -51,6 +51,30 @@ namespace MusicService.Services.Implementations
             return twgDTO;
         }
 
+        public async Task<TrackWithGenresDTO> GetRandomTrack()
+        {
+
+            int total = _context.Tracks.Count();
+            Random r = new Random();
+            int offset = r.Next(0, total);
+
+            Track? t = await _context.Tracks
+                .Include(t => t.TrackGenres)
+                .Skip(offset)
+                .FirstOrDefaultAsync();
+
+            TrackWithGenresDTO twgDTO = _mapper.Map<TrackWithGenresDTO>(t);
+            twgDTO.Genres = new List<GenreDTO>();
+            #pragma warning disable CS8602
+            foreach(TrackGenre trackGenre in t.TrackGenres){
+                twgDTO.Genres.Add(
+                    _mapper.Map<GenreDTO>(_context.Genres.Find(trackGenre.GenreId))
+                );
+            }
+            #pragma warning restore CS8602
+            return twgDTO;
+        }
+
         public async Task<List<TrackWithGenresDTO>> GetTracksByNameQuery(string nameQuery)
         {
             List<Track>? listTrack = await _context.Tracks
