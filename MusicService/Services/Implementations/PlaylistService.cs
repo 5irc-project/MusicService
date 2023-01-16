@@ -98,14 +98,16 @@ namespace MusicService.Services.Implementations
             return lpwtDTO;        
         }
 
-        public async Task PostPlaylist(PlaylistDTO pDTO)
+        public async Task<PlaylistDTO> PostPlaylist(PlaylistDTO pDTO)
         {
             if (_context.Playlists.FirstOrDefault(p => p.PlaylistId == pDTO.PlaylistId) != null){
                 throw new AlreadyExistsException(nameof(Playlist), pDTO.PlaylistId);
             }
 
-            _context.Playlists.Add(_mapper.Map<Playlist>(pDTO));
+            Playlist playlistToAdd = _mapper.Map<Playlist>(pDTO);
+            _context.Playlists.Add(playlistToAdd);
             await _context.SaveChangesAsync();
+            return _mapper.Map<PlaylistDTO>(playlistToAdd);
         }
 
         public async Task PutPlaylist(int id, PlaylistDTO pDTO)

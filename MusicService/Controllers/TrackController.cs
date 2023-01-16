@@ -36,9 +36,20 @@ namespace MusicService.Controllers
 
         // GET: api/Track/NameQuery/"ex"
         [HttpGet("NameQuery/{nameQuery}")]
-        public async Task<ActionResult<List<TrackWithGenresDTO>>> GetTrackByNameQuery(string nameQuery)
+        public async Task<ActionResult<List<TrackWithGenresDTO>>> GetTracksByNameQuery(string nameQuery)
         {
             return await _service.GetTracksByNameQuery(nameQuery);
+        }
+
+        // GET: api/Track/NameQuery/"ex"
+        [HttpGet("Genre/{genreId}")]
+        public async Task<ActionResult<List<TrackWithGenresDTO>>> GetTracskByGenre(int genreId)
+        {
+            try{
+                return await _service.GetTracksByGenre(genreId);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
         }
 
         // PUT: api/Track/5
@@ -64,12 +75,12 @@ namespace MusicService.Controllers
         public async Task<ActionResult<TrackWithGenresDTO>> PostTrack(TrackDTO tDTO)
         {
             try{
-                await _service.PostTrack(tDTO);
+                TrackDTO track = await _service.PostTrack(tDTO);
+                return CreatedAtAction("GetTrack", new { id = track.TrackId }, track);
             }catch(AlreadyExistsException e){
                 return BadRequest(e.Content);
             }
 
-            return CreatedAtAction("GetTrack", new { id = tDTO.TrackId }, tDTO);
         }
 
         // POST: api/Track/TrackGenre
@@ -77,14 +88,13 @@ namespace MusicService.Controllers
         public async Task<ActionResult<TrackWithGenresDTO>> PostTrackWithGenres(TrackWithGenresDTO twgDTO)
         {
             try{
-                await _service.PostTrackWithGenres(twgDTO);
+                TrackDTO track = await _service.PostTrackWithGenres(twgDTO);
+                return CreatedAtAction("GetTrack", new { id = track.TrackId }, track);
             }catch(NotFoundException e){
                 return NotFound(e.Content);
             }catch(AlreadyExistsException e){
                 return BadRequest(e.Content);
             }
-
-            return CreatedAtAction("GetTrack", new { id = twgDTO.TrackId }, twgDTO);
         }
 
         // DELETE: api/Track/5

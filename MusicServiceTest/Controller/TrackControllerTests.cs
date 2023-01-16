@@ -140,7 +140,7 @@ namespace MusicServiceTest.Controller
                 _context.Tracks.Add(_mapper.Map<Track>(trackToAdd));
             });
             _context.SaveChanges();
-            List<TrackWithGenresDTO> listTrackToTestWithGenres = _controller.GetTrackByNameQuery("Track").Result.Value;
+            List<TrackWithGenresDTO> listTrackToTestWithGenres = _controller.GetTracksByNameQuery("Track").Result.Value;
 
             // Assert
             Assert.AreEqual(listTrackToTestWithGenres.Count, 3);

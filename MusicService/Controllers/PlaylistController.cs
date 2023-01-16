@@ -65,11 +65,11 @@ namespace MusicService.Controllers
         public async Task<ActionResult<PlaylistDTO>> PostPlaylist(PlaylistDTO pDTO)
         {
             try{
-                await _service.PostPlaylist(pDTO);
+                PlaylistDTO playlist = await _service.PostPlaylist(pDTO);
+                return CreatedAtAction("GetPlaylist", new { id = playlist.PlaylistId }, playlist);
             }catch(AlreadyExistsException e){
                 return BadRequest(e.Content);
             }
-            return CreatedAtAction("GetPlaylist", new { id = pDTO.PlaylistId }, pDTO);
         }
 
         // DELETE: api/Playlist/5
