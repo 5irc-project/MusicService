@@ -21,3 +21,9 @@ Can't test cascade deletes, not supported InMemory (or mock), and also apprently
 Return message that states what happened when adding / removing genres ? (yes)
 Make Name value for Genre / Kind nullable maybe, it's annoying otherwise (dunno)
 Add Check for user with playlist
+Add genres when getting playlist
+
+
+TOADD :
+
+Tests pour post (maintenant je renvoie l'id donc faut voir si ça marche vraiment)
