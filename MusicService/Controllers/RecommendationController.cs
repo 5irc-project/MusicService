@@ -16,7 +16,7 @@ namespace MusicService.Controllers
         }
 
         // POST: api/Recommendation
-        [HttpGet]
+        [HttpPost]
         public async Task<ActionResult<PlaylistWithTracksDTO>> GeneratePlaylist(List<TrackDTO> listTrack)
         {
             return await _service.GeneratePlaylist(listTrack);

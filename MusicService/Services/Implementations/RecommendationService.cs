@@ -2,6 +2,7 @@ using AutoMapper;
 using MusicService.DTOs;
 using MusicService.Exceptions;
 using MusicService.Models;
+using MusicService.RestConsumers;
 using MusicService.Services.Interfaces;
 
 namespace MusicService.Services.Implementations
@@ -25,6 +26,7 @@ namespace MusicService.Services.Implementations
         public async Task<PlaylistWithTracksDTO> GeneratePlaylist(List<TrackDTO> listTrack)
         {
             var rand = new Random();
+            
             
             var g = _context.Genres.FirstOrDefault(g => g.GenreId == 1);
 
