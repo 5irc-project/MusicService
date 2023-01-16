@@ -8,7 +8,7 @@ namespace MusicService.RestConsumers
     {
          private static HttpClient client = new HttpClient();
 
-        public static async Task<GenreDTO> PredictGenre(List<TrackMachineLearningDTO> listTracks)
+        public static async Task<GenreDTO?> PredictGenre(List<TrackMachineLearningDTO> listTracks)
         {
             try
             {
@@ -20,7 +20,7 @@ namespace MusicService.RestConsumers
                 }else {
                     throw new Exception("There was an error while predicting the genre");
                 }
-            } 
+            }
             catch (Exception e) {
                 throw e;
             }
