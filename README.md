@@ -35,3 +35,7 @@ Pas de type générique pr QueueMessage (naze)
 La d
 
 Ajouter une méthode pr créer une playlist favoris pr un connard (peut y en avoir qu'une)
+
+Dans appsettings faut foutre nom de queue / logs
+
+Dans le controller mieux dispatch

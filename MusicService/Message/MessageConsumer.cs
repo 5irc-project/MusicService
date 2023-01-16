@@ -9,7 +9,7 @@ using MusicService.DTOs;
 
 namespace MusicService.Message
 {
-    public class MessageConsumer<T>
+    public class MessageConsumer<T, R>
     {
         private readonly IConnection _conn;
         private readonly object _context;
@@ -24,15 +24,19 @@ namespace MusicService.Message
                                 {
                                     var body = ea.Body.ToArray();
                                     var message = Encoding.UTF8.GetString(body);
-                                    var test = JsonConvert.DeserializeObject<QueueMessage>(message);
+                                    var test = JsonConvert.DeserializeObject<QueueMessage<R>>(message);
 
                                     var res = typeof(T).GetMethod(test._callback);
-                                    var res2 = res.Invoke(context, new List<TrackDTO>[] { test._obj });
+                                    var res2 = res.Invoke(context, new object[] { test._obj });
                                 };
                 channel.BasicConsume(queue: "queue/MusicQueue",
                                  autoAck: true,
                                  consumer: consumer);
             }
+        }
+
+        private void mettredansunefction(){
+            // mettre dedans a partir du received
         }
     }
 }

@@ -16,7 +16,7 @@ namespace MusicService.Services.Implementations
         private readonly ITrackService _trackService;
         private readonly IPlaylistService _playlistService;
         private readonly IMessageProducer _messageProducer;
-        private readonly MessageConsumer<RecommendationService> _messageConsumer;
+        private readonly MessageConsumer<RecommendationService, List<TrackDTO>> _messageConsumer;
 
         public RecommendationService(MusicServiceDBContext context, IMapper mapper, ITrackService trackService, IPlaylistService playlistService, IMessageProducer messageProducer)
         {
@@ -25,11 +25,11 @@ namespace MusicService.Services.Implementations
             _trackService = trackService;
             _playlistService = playlistService;
             _messageProducer = messageProducer;
-            _messageConsumer = new MessageConsumer<RecommendationService>(this);
+            _messageConsumer = new MessageConsumer<RecommendationService, List<TrackDTO>>(this);
         }
 
         public async Task DispatchRequestToQueue(List<TrackDTO> listTrack, string nameOfMethod){
-            _messageProducer.ProduceMessage(new QueueMessage(listTrack, nameOfMethod));
+            _messageProducer.ProduceMessage(new QueueMessage<List<TrackDTO>>(listTrack, nameOfMethod));
         }
 
         public async Task GeneratePlaylist(List<TrackDTO> listTrack)
