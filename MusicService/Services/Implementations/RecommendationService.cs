@@ -25,24 +25,30 @@ namespace MusicService.Services.Implementations
 
         public async Task<PlaylistWithTracksDTO> GeneratePlaylist(List<TrackDTO> listTrack)
         {
-            var rand = new Random();
-            
-          
-            var g = _context.Genres.FirstOrDefault(g => g.GenreId == 1);
-
-            if (g != null){
-                GenreDTO gDTO = _mapper.Map<GenreDTO>(g);
-                List<TrackWithGenresDTO> listTrackWithGenre = await _trackService.GetTracksByGenre(gDTO.GenreId);
-                List<TrackWithGenresDTO> listTrackWithGenreRandom = listTrackWithGenre.OrderBy(x => rand.Next()).Take(20).ToList();
-                var action = _playlistService.PostPlaylist(new PlaylistDTO() {
-                    KindId = 1,
-                    PlaylistName = "Testing",
-                    UserId = 0
-                });
-                await _playlistService.AddTracksToPlaylist(action.Result.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));
-                return await _playlistService.GetPlaylist(action.Result.PlaylistId);
-            }else{
-                throw new NotFoundException("a", nameof(Genre));
+            try{
+                var rand = new Random();
+                if (listTrack.Count != 0){
+                    var genrePredicted = await MLService.PredictGenre(_mapper.Map<List<TrackMachineLearningDTO>>(listTrack));
+                    var g = _context.Genres.FirstOrDefault(g => g.Name == genrePredicted.Name);
+                    if (g != null){
+                        GenreDTO gDTO = _mapper.Map<GenreDTO>(g);
+                        List<TrackWithGenresDTO> listTrackWithGenre = await _trackService.GetTracksByGenre(gDTO.GenreId);
+                        List<TrackWithGenresDTO> listTrackWithGenreRandom = listTrackWithGenre.OrderBy(x => rand.Next()).Take(20).ToList();
+                        var action = _playlistService.PostPlaylist(new PlaylistDTO() {
+                            KindId = 1,
+                            PlaylistName = "Testing",
+                            UserId = 0
+                        });
+                        await _playlistService.AddTracksToPlaylist(action.Result.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));
+                        return await _playlistService.GetPlaylist(action.Result.PlaylistId);
+                    }else{
+                        throw new NotFoundException(genrePredicted.Name, nameof(Genre));
+                    }
+                }else{
+                    throw new BadRequestException("Please provide at least ten tracks");
+                }
+            }catch(Exception e){
+                throw e;
             }
         }
     }

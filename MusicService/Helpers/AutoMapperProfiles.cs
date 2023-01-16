@@ -9,6 +9,7 @@ namespace MusicService.Helpers
         public AutoMapperProfiles(){
             CreateMap<Track, TrackDTO>().ReverseMap();
             CreateMap<Track, TrackWithGenresDTO>().ReverseMap();
+            CreateMap<TrackDTO, TrackMachineLearningDTO>();
             CreateMap<Genre, GenreDTO>().ReverseMap();
             CreateMap<Playlist, PlaylistDTO>().ReverseMap();
             CreateMap<Playlist, PlaylistWithTracksDTO>().ReverseMap();
