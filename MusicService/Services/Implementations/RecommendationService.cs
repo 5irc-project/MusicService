@@ -27,7 +27,7 @@ namespace MusicService.Services.Implementations
         {
             var rand = new Random();
             
-            
+          
             var g = _context.Genres.FirstOrDefault(g => g.GenreId == 1);
 
             if (g != null){
@@ -35,7 +35,7 @@ namespace MusicService.Services.Implementations
                 List<TrackWithGenresDTO> listTrackWithGenre = await _trackService.GetTracksByGenre(gDTO.GenreId);
                 List<TrackWithGenresDTO> listTrackWithGenreRandom = listTrackWithGenre.OrderBy(x => rand.Next()).Take(20).ToList();
                 var action = _playlistService.PostPlaylist(new PlaylistDTO() {
-                    KindId = 2,
+                    KindId = 1,
                     PlaylistName = "Testing",
                     UserId = 0
                 });

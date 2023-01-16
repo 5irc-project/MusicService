@@ -10,7 +10,7 @@ namespace MusicService.RestConsumers
         {
             try
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync("https://localhost:8000/genre", listTracks);
+                HttpResponseMessage response = await client.PostAsJsonAsync("http://localhost:8000/genre", listTracks);
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("aaa");
