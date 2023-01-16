@@ -1,8 +1,6 @@
 using MusicService.DTOs;
-using System.Text;
-using System.Text.Json;
 
-namespace MusicService.RestConsumers
+namespace MusicService.RestConsumer
 {
     public class MLService
     {

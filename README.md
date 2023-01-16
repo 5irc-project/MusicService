@@ -27,3 +27,11 @@ Add genres when getting playlist
 TOADD :
 
 Tests pour post (maintenant je renvoie l'id donc faut voir si ça marche vraiment)
+
+CHIANT :
+
+RAbbit mq mets 15 ans ?
+Pas de type générique pr QueueMessage (naze)
+La d
+
+Ajouter une méthode pr créer une playlist favoris pr un connard (peut y en avoir qu'une)

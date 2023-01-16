@@ -4,6 +4,7 @@ namespace MusicService.Services.Interfaces
 {
     public interface IRecommendationService
     {
-        Task<PlaylistWithTracksDTO> GeneratePlaylist(List<TrackDTO> listTrack);
+        Task DispatchRequestToQueue(List<TrackDTO> listTrack, string nameOfMethod);
+        Task GeneratePlaylist(List<TrackDTO> listTrack);
     }
 }

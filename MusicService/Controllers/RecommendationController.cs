@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using MusicService.DTOs;
-using MusicService.Exceptions;
 using MusicService.Services.Interfaces;
 
 namespace MusicService.Controllers
@@ -18,15 +17,10 @@ namespace MusicService.Controllers
 
         // POST: api/Recommendation
         [HttpPost]
-        public async Task<ActionResult<PlaylistWithTracksDTO>> GeneratePlaylist(List<TrackDTO> listTrack)
+        public async Task<IActionResult> GeneratePlaylist(List<TrackDTO> listTrack)
         {
-            try{
-                return await _service.GeneratePlaylist(listTrack);
-            }catch(NotFoundException e){
-                return NotFound(e.Content);
-            }catch(BadRequestException e){
-                return BadRequest(e.Content);
-            }
+            await _service.DispatchRequestToQueue(listTrack, nameof(GeneratePlaylist));
+            return Accepted();
         }   
     }
 }

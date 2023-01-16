@@ -9,6 +9,7 @@ using MusicService.DTOs;
 using MusicService.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
+#pragma warning disable CS8602, CS8600, CS8604
 namespace MusicServiceTest.Service
 {
     [TestClass()]
@@ -235,3 +236,4 @@ namespace MusicServiceTest.Service
         }
     }
 }
+#pragma warning restore CS8602, CS8600, CS8604

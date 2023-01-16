@@ -77,11 +77,13 @@ namespace MusicService.Services.Implementations
 
         public async Task<List<TrackWithGenresDTO>> GetTracksByNameQuery(string nameQuery)
         {
+            #pragma warning disable CS8602
             List<Track>? listTrack = await _context.Tracks
                 .Include(t => t.TrackGenres)
                 .Where(t => t.TrackName.ToLower().Contains(nameQuery.ToLower()))
                 .Take(50)
                 .ToListAsync();
+            #pragma warning restore CS8602
             List<TrackWithGenresDTO> listTracksWithGenre = new List<TrackWithGenresDTO>();
 
             listTrack.ForEach(t => {
@@ -108,12 +110,14 @@ namespace MusicService.Services.Implementations
                 throw new NotFoundException(genreId, nameof(Genre));
             }
 
+            #pragma warning disable CS8604
             List<Track>? listTrack = await _context.Tracks
                 .Include(t => t.TrackGenres)
                 .Where(t => t.TrackGenres.Any(tg => tg.GenreId == genreId))
                 .Take(200)
                 .ToListAsync();
             List<TrackWithGenresDTO> listTracksWithGenre = new List<TrackWithGenresDTO>();
+            #pragma warning restore CS8604
 
             listTrack.ForEach(t => {
                 TrackWithGenresDTO twgDTO = _mapper.Map<TrackWithGenresDTO>(t);

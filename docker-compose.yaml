@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+  musicdb:
+    image: postgres:latest
+    container_name: carddb
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: MusicServiceDatabase
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-data-music:/data/postgres
+    ports:
+      - "8003:5432"
+    networks:
+      - shared-network
+  
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: unless-stopped
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: root@root.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "8090:80"
+    depends_on:
+      - musicdb
+    networks:
+      - shared-network
+
+
+  rabbitmq:
+    image: 'bitnami/rabbitmq:latest'
+    ports:
+      - "5672:5672"
+      - "8080:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: root
+    networks:
+      - shared-network
+
+networks:
+  shared-network:
+volumes:
+  pgadmin:
+  postgres-data-music:
+
