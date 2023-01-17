@@ -53,20 +53,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app = MigrateDatabase(app);
-
 app.Run();
-
-static WebApplication MigrateDatabase(WebApplication app){
-    using  (var scope = app.Services.CreateScope()){
-        IServiceProvider services = scope.ServiceProvider;
-        try{
-            MusicServiceDBContext db = services.GetRequiredService<MusicServiceDBContext>();
-            db.Database.Migrate();
-        }catch(Exception e){
-            ILogger logger = services.GetRequiredService<ILogger<Program>>();
-            logger.LogError(e, "An error occured whiel migrating the database"); 
-        }
-        return app;
-    }
-}
