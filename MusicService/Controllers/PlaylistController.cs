@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MusicService.DTOs;
 using MusicService.Exceptions;
@@ -41,9 +42,9 @@ namespace MusicService.Controllers
 
         // GET: api/Playlist/User/5
         [HttpGet("User/{userId}")]
-        public async Task<ActionResult<List<PlaylistWithTracksDTO>>> GetPlaylistsByUser(int userId)
+        public async Task<ActionResult<List<PlaylistWithTracksDTO>>> GetPlaylistsByUserId(int userId)
         {
-            return await _service.GetPlaylistsByUser(userId);
+            return await _service.GetPlaylistsByUserId(userId);
         }
 
         // PUT: api/Playlist/5
@@ -143,5 +144,23 @@ namespace MusicService.Controllers
             await _service.DeletePlaylists(userId);
             return NoContent();
         }  
+
+        // Get: api/Track/Playlists     
+        [Authorize]
+        [HttpGet("Trackless/{trackId}")]
+        public async Task<ActionResult<List<PlaylistDTO>>> GetPlaylistsWithoutTrackForUser(int trackId)
+        {
+            try{
+                var userId = GetUserIdFromClaims();
+                return await _service.GetPlaylistsWithoutTrackForUser(trackId, userId);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
+        }
+
+        private int GetUserIdFromClaims() {
+            var id = User.Claims.First(c => c.Type == "UserId").Value;
+            return int.Parse(id);
+        }   
     }
 }

@@ -142,17 +142,6 @@ namespace MusicService.Controllers
         //     return NoContent();
         // }
 
-        // Get: api/Track/Playlists     
-        [HttpGet("Playlists/{id}")]
-        public async Task<ActionResult<List<PlaylistDTO>>> GetTrackPlaylists(int id)
-        {
-            try{
-                return await _service.GetTrackPlaylists(id);
-            }catch(NotFoundException e){
-                return NotFound(e.Content);
-            }
-        }
-
         [Authorize]
         [HttpGet("{id}/IsInFavorite/")]
         public async Task<ActionResult<bool>> IsTrackInFavorite(int id){

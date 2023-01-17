@@ -255,29 +255,6 @@ namespace MusicService.Services.Implementations
             }
         }
 
-        public async Task<List<PlaylistDTO>> GetTrackPlaylists(int id)
-        {
-            Track t = await _context.Tracks
-                .AsNoTracking()
-                .Include(t => t.PlaylistTracks)
-                .FirstOrDefaultAsync(t => t.TrackId == id);
-            
-            List<PlaylistDTO> listPlaylistToReturn = new List<PlaylistDTO>();
-
-            if (t != null){
-                foreach(var pt in t.PlaylistTracks){
-                    var p = _context.Playlists.FirstOrDefault(p => p.PlaylistId == pt.PlaylistId);
-                    if (p != null){
-                        listPlaylistToReturn.Add(_mapper.Map<PlaylistDTO>(p));
-                    }
-                }
-            }else{
-                throw new NotFoundException(id, nameof(Track));
-            }
-
-            return listPlaylistToReturn;
-        }
-
         public async Task<bool> IsTrackInPlaylist(int id, int playlistId){
             Playlist p = _context.Playlists
                     .Where(p => p.PlaylistId == playlistId)

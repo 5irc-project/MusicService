@@ -57,7 +57,7 @@ namespace MusicService.Services.Implementations
             return pwtDTO;
         }
 
-        public async Task<List<PlaylistWithTracksDTO>> GetPlaylistsByUser(int userId)
+        public async Task<List<PlaylistWithTracksDTO>> GetPlaylistsByUserId(int userId)
         {
             List<Playlist>? listPlaylist = await _context.Playlists
                 .Include(p => p.Kind)
@@ -213,7 +213,7 @@ namespace MusicService.Services.Implementations
         public async Task DeletePlaylists(int userId)
         {
             // TODO : Check user exists ?
-            List<PlaylistWithTracksDTO> listPlaylistUser = await this.GetPlaylistsByUser(userId);
+            List<PlaylistWithTracksDTO> listPlaylistUser = await this.GetPlaylistsByUserId(userId);
             if (listPlaylistUser != null && listPlaylistUser.Count != 0){
                 listPlaylistUser.ForEach(p => {
                     _context.Playlists.Remove(_mapper.Map<Playlist>(p));
@@ -225,7 +225,7 @@ namespace MusicService.Services.Implementations
         public async Task<PlaylistDTO> AddFavoritePlaylist(int userId)
         {
             // TODO : Check user exists ?
-            List<PlaylistWithTracksDTO> listPlaylistUser = await this.GetPlaylistsByUser(userId);
+            List<PlaylistWithTracksDTO> listPlaylistUser = await this.GetPlaylistsByUserId(userId);
             if (listPlaylistUser != null && listPlaylistUser.Count != 0){
                 if (listPlaylistUser.Any(p => p.PlaylistName == "Favorite Musics" && p.KindId == 3)){
                     throw new AlreadyExistsException(userId);
@@ -242,5 +242,25 @@ namespace MusicService.Services.Implementations
             await _context.SaveChangesAsync();
             return _mapper.Map<PlaylistDTO>(p);             
         }
+
+        public async Task<List<PlaylistDTO>> GetPlaylistsWithoutTrackForUser(int trackId, int userId)
+        {
+            // TODO : Chech user exists ?
+            List<PlaylistWithTracksDTO> listP = await this.GetPlaylistsByUserId(userId);
+            List<PlaylistWithTracksDTO> listPlaylistsToRemove = new List<PlaylistWithTracksDTO>();
+
+            listP.ForEach(p => {
+                if (p.Tracks.Any(t => t.TrackId == trackId)){
+                    listPlaylistsToRemove.Add(p);
+                }
+            });
+
+            listPlaylistsToRemove.ForEach(p =>{
+                listP.Remove(p);
+            });
+
+            return _mapper.Map<List<PlaylistDTO>>(_mapper.Map<List<Playlist>>(listP));
+        }
+
     }
 }

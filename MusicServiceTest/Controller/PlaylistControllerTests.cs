@@ -163,7 +163,7 @@ namespace MusicServiceTest.Controller
                 _context.Playlists.Add(_mapper.Map<Playlist>(playlistToAdd));
             });
             _context.SaveChanges();
-            List<PlaylistWithTracksDTO> listPlaylistToTestWithTracks = _controller.GetPlaylistsByUser(1000).Result.Value;
+            List<PlaylistWithTracksDTO> listPlaylistToTestWithTracks = _controller.GetPlaylistsByUserId(1000).Result.Value;
 
             // Assert
             Assert.AreEqual(listPlaylistToTestWithTracks.Count, 3);

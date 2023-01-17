@@ -8,7 +8,7 @@ using MusicService.Message.Interfaces;
 using MusicService.Message.Implementations;
 using RabbitMQ.Client;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -56,11 +56,11 @@ app.MapControllers();
 
 app.Run();
 
-// static ConnectToBrokerAndCreateQueue(){
+// static void ConnectToBrokerAndCreateQueue(IConfiguration config){
 //     IConnection conn  = new ConnectionFactory { 
-//         HostName = _config.GetValue<string>("Queue:HostName"), 
-//         UserName = _config.GetValue<string>("Queue:UserName"),  
-//         Password = _config.GetValue<string>("Queue:Password"),  
+//         HostName = config.GetValue<string>("Queue:HostName"), 
+//         UserName = config.GetValue<string>("Queue:UserName"),  
+//         Password = config.GetValue<string>("Queue:Password"),  
 //         AutomaticRecoveryEnabled = true 
 //     }.CreateConnection();
 // }
