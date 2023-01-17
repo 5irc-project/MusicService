@@ -13,6 +13,7 @@ namespace MusicService.Services.Interfaces
         Task AddTracksToPlaylist(int id, List<TrackDTO> lTD);
         Task RemoveTracksFromPlaylist(int id, List<TrackDTO> lTD);
         Task DeletePlaylists(int userId);
+        Task GeneratePlaylist(List<TrackDTO> listTrack);
         Task<PlaylistDTO> AddFavoritePlaylist(int userId);
         Task<List<PlaylistDTO>> GetPlaylistsWithoutTrackForUser(int trackId, int userId);
     }

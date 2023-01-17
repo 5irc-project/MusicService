@@ -1,10 +1,10 @@
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MusicService.DTOs;
 using MusicService.Exceptions;
 using MusicService.Message;
-using MusicService.Message.Interfaces;
-using MusicService.Services;
+using MusicService.Services.Implementations;
 using MusicService.Services.Interfaces;
 
 namespace MusicService.Controllers
@@ -14,12 +14,12 @@ namespace MusicService.Controllers
     public class PlaylistController : ControllerBase
     {
         private readonly IPlaylistService _service;
-        private readonly IMessageProducer _messageProducer;
+        private readonly IPublishEndpoint _publishEndPoint;
 
-        public PlaylistController(IPlaylistService service, IMessageProducer messageProducer)
+        public PlaylistController(IPlaylistService service, IPublishEndpoint publishEndpoint)
         {
             _service = service;
-            _messageProducer = messageProducer;
+            _publishEndPoint = publishEndpoint;
         }
 
         // GET: api/Playlist
@@ -123,9 +123,9 @@ namespace MusicService.Controllers
         [HttpPost("Recommendation")]
         public IActionResult GeneratePlaylist(List<TrackDTO> listTrack)
         {
-            _messageProducer.ProduceMessage(new QueueMessage<List<TrackDTO>>(listTrack, nameof(GeneratePlaylist)));
+            _publishEndPoint.Publish<MessageQueue>(new MessageQueue(listTrack));
             return Accepted();
-        }  
+        }
 
         // POST: api/Playlist/private/{userId}
         [HttpPost("private/{userId}")]

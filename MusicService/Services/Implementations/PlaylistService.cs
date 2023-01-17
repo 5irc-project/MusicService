@@ -5,7 +5,6 @@ using MusicService.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MusicService.RestConsumer;
-using MusicService.Message;
 
 namespace MusicService.Services.Implementations
 {
@@ -15,7 +14,6 @@ namespace MusicService.Services.Implementations
         private readonly MusicServiceDBContext _context;
         private readonly IMapper _mapper;
         private readonly ITrackService _trackService;
-        private readonly MessageConsumer<PlaylistService, List<TrackDTO>> _messageConsumer;
 
         public PlaylistService(MusicServiceDBContext context, IMapper mapper, ITrackService trackService, IConfiguration config)
         {
@@ -23,7 +21,6 @@ namespace MusicService.Services.Implementations
             _mapper = mapper;
             _trackService = trackService;
             _config = config;
-            _messageConsumer = new MessageConsumer<PlaylistService, List<TrackDTO>>(this, _config); // TODO : Remove config ?
         }
 
         public async Task DeletePlaylist(int id)
