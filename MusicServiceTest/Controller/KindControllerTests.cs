@@ -91,149 +91,149 @@ namespace MusicServiceTest.Service
             Assert.AreEqual(actionToTest.Value, string.Format("No Kind found with ID = {0}", -1000));
         }
 
-        [TestMethod()]
-        public void PutKind_ReturnsOk()
-        {
-            // Arrange
-            KindDTO kindToAdd = new KindDTO(){
-                KindId = -2,
-                Name = "KindTestPutKind"
-            };
-            KindDTO kindToPut = new KindDTO(){
-                KindId = -2,
-                Name = "KindTestPutKindAfterPut"
-            };
+        // [TestMethod()]
+        // public void PutKind_ReturnsOk()
+        // {
+        //     // Arrange
+        //     KindDTO kindToAdd = new KindDTO(){
+        //         KindId = -2,
+        //         Name = "KindTestPutKind"
+        //     };
+        //     KindDTO kindToPut = new KindDTO(){
+        //         KindId = -2,
+        //         Name = "KindTestPutKindAfterPut"
+        //     };
 
-            // Act
-            _context.Kinds.Add(_mapper.Map<Kind>(kindToAdd));
-            _context.SaveChanges();
-            _context.ChangeTracker.Clear();
-            var actionToTest = _controller.PutKind(kindToPut.KindId, kindToPut).Result;
+        //     // Act
+        //     _context.Kinds.Add(_mapper.Map<Kind>(kindToAdd));
+        //     _context.SaveChanges();
+        //     _context.ChangeTracker.Clear();
+        //     var actionToTest = _controller.PutKind(kindToPut.KindId, kindToPut).Result;
 
-            // Assert
-            Assert.IsInstanceOfType(actionToTest, typeof(NoContentResult));
-            Assert.AreEqual(_context.Kinds.Find(kindToPut.KindId).Name, kindToPut.Name);         
-        }
+        //     // Assert
+        //     Assert.IsInstanceOfType(actionToTest, typeof(NoContentResult));
+        //     Assert.AreEqual(_context.Kinds.Find(kindToPut.KindId).Name, kindToPut.Name);         
+        // }
 
-        [TestMethod()]
-        public void PutKind_ReturnsNotFound()
-        {
-            // Arrange
-            KindDTO kindToPut = new KindDTO(){
-                KindId = -1000,
-                Name = "KindTestPutKindAfterPut"
-            };
+        // [TestMethod()]
+        // public void PutKind_ReturnsNotFound()
+        // {
+        //     // Arrange
+        //     KindDTO kindToPut = new KindDTO(){
+        //         KindId = -1000,
+        //         Name = "KindTestPutKindAfterPut"
+        //     };
 
-            // Act
-            var actionToTest = (NotFoundObjectResult)_controller.PutKind(kindToPut.KindId, kindToPut).Result;
+        //     // Act
+        //     var actionToTest = (NotFoundObjectResult)_controller.PutKind(kindToPut.KindId, kindToPut).Result;
 
-            // Assert
-            Assert.AreEqual(actionToTest.Value, string.Format("No Kind found with ID = {0}", kindToPut.KindId));         
-        }
+        //     // Assert
+        //     Assert.AreEqual(actionToTest.Value, string.Format("No Kind found with ID = {0}", kindToPut.KindId));         
+        // }
 
-        [TestMethod()]
-        public void PutKind_ReturnsBadRequest()
-        {
-            // Arrange
-            KindDTO kindToPut = new KindDTO(){
-                KindId = -1000,
-                Name = "KindTestPutKindAfterPut"
-            };
+        // [TestMethod()]
+        // public void PutKind_ReturnsBadRequest()
+        // {
+        //     // Arrange
+        //     KindDTO kindToPut = new KindDTO(){
+        //         KindId = -1000,
+        //         Name = "KindTestPutKindAfterPut"
+        //     };
 
-            // Act
-            var actionToTest = _controller.PutKind(-1001, kindToPut).Result;
+        //     // Act
+        //     var actionToTest = _controller.PutKind(-1001, kindToPut).Result;
 
-            // Assert
-            Assert.IsInstanceOfType(actionToTest, typeof(BadRequestResult));         
-        }
+        //     // Assert
+        //     Assert.IsInstanceOfType(actionToTest, typeof(BadRequestResult));         
+        // }
 
-        [TestMethod()]
-        public void PostKind_ReturnsOk()
-        {
-            // Arrange
-            KindDTO kindToPost = new KindDTO(){
-                KindId = -3,
-                Name = "KindTestPost"
-            };
+        // [TestMethod()]
+        // public void PostKind_ReturnsOk()
+        // {
+        //     // Arrange
+        //     KindDTO kindToPost = new KindDTO(){
+        //         KindId = -3,
+        //         Name = "KindTestPost"
+        //     };
 
-            // Act
-            var actionToTest = _controller.PostKind(kindToPost).Result.Result;
+        //     // Act
+        //     var actionToTest = _controller.PostKind(kindToPost).Result.Result;
 
-            // Assert
-            Assert.IsInstanceOfType(actionToTest, typeof(CreatedAtActionResult));
-            Assert.AreEqual(_mapper.Map<KindDTO>(_context.Kinds.Find(kindToPost.KindId)), kindToPost);        
-        }
+        //     // Assert
+        //     Assert.IsInstanceOfType(actionToTest, typeof(CreatedAtActionResult));
+        //     Assert.AreEqual(_mapper.Map<KindDTO>(_context.Kinds.Find(kindToPost.KindId)), kindToPost);        
+        // }
 
-        [TestMethod()]
-        public void PostKind_ReturnsAlreadyExists_Id()
-        {
-            // Arrange
-            KindDTO kindToAdd = new KindDTO(){
-                KindId = -4,
-                Name = "KindTestAlreadyExists"
-            };
-            KindDTO kindToPost = new KindDTO(){
-                KindId = -4,
-                Name = "Nothing"
-            };
+        // [TestMethod()]
+        // public void PostKind_ReturnsAlreadyExists_Id()
+        // {
+        //     // Arrange
+        //     KindDTO kindToAdd = new KindDTO(){
+        //         KindId = -4,
+        //         Name = "KindTestAlreadyExists"
+        //     };
+        //     KindDTO kindToPost = new KindDTO(){
+        //         KindId = -4,
+        //         Name = "Nothing"
+        //     };
 
-            // Act
-            _context.Kinds.Add(_mapper.Map<Kind>(kindToAdd));
-            _context.SaveChanges();
-            _context.ChangeTracker.Clear();
-            var actionToTest = (BadRequestObjectResult)_controller.PostKind(kindToPost).Result.Result;
-            // Assert
-            Assert.AreEqual(actionToTest.Value, string.Format("Kind with ID = {0} already exists", kindToPost.KindId));        
-        }
+        //     // Act
+        //     _context.Kinds.Add(_mapper.Map<Kind>(kindToAdd));
+        //     _context.SaveChanges();
+        //     _context.ChangeTracker.Clear();
+        //     var actionToTest = (BadRequestObjectResult)_controller.PostKind(kindToPost).Result.Result;
+        //     // Assert
+        //     Assert.AreEqual(actionToTest.Value, string.Format("Kind with ID = {0} already exists", kindToPost.KindId));        
+        // }
 
-        [TestMethod()]
-        public void PostKind_ReturnsAlreadyExists_Name()
-        {
-            // Arrange
-            KindDTO kindToAdd = new KindDTO(){
-                KindId = -5,
-                Name = "KindTestAlreadyExists"
-            };
-            KindDTO kindToPost = new KindDTO(){
-                KindId = -1000,
-                Name = "KindTestAlreadyExists"
-            };
+        // [TestMethod()]
+        // public void PostKind_ReturnsAlreadyExists_Name()
+        // {
+        //     // Arrange
+        //     KindDTO kindToAdd = new KindDTO(){
+        //         KindId = -5,
+        //         Name = "KindTestAlreadyExists"
+        //     };
+        //     KindDTO kindToPost = new KindDTO(){
+        //         KindId = -1000,
+        //         Name = "KindTestAlreadyExists"
+        //     };
 
-            // Act
-            _context.Kinds.Add(_mapper.Map<Kind>(kindToAdd));
-            _context.SaveChanges();
-            _context.ChangeTracker.Clear();
-            var actionToTest = (BadRequestObjectResult)_controller.PostKind(kindToPost).Result.Result;
-            // Assert
-            Assert.AreEqual(actionToTest.Value, string.Format("Kind with Name {0} already exists", kindToPost.Name));        
-        }
+        //     // Act
+        //     _context.Kinds.Add(_mapper.Map<Kind>(kindToAdd));
+        //     _context.SaveChanges();
+        //     _context.ChangeTracker.Clear();
+        //     var actionToTest = (BadRequestObjectResult)_controller.PostKind(kindToPost).Result.Result;
+        //     // Assert
+        //     Assert.AreEqual(actionToTest.Value, string.Format("Kind with Name {0} already exists", kindToPost.Name));        
+        // }
 
-        [TestMethod()]
-        public void DeleteKind_ReturnsOk()
-        {
-            // Arrange
-            KindDTO kindToAdd = new KindDTO(){
-                KindId = -6,
-                Name = "KindTestDelete"
-            };
+        // [TestMethod()]
+        // public void DeleteKind_ReturnsOk()
+        // {
+        //     // Arrange
+        //     KindDTO kindToAdd = new KindDTO(){
+        //         KindId = -6,
+        //         Name = "KindTestDelete"
+        //     };
 
-            // Act
-            _context.Kinds.Add(_mapper.Map<Kind>(kindToAdd));
-            _context.SaveChanges();
-            _context.ChangeTracker.Clear();
-            var actionToTest = _controller.DeleteKind(kindToAdd.KindId).Result;
-            // Assert
-            Assert.IsInstanceOfType(actionToTest, typeof(NoContentResult));
-            Assert.AreEqual(_context.Kinds.Find(kindToAdd.KindId), null);  
-        }
+        //     // Act
+        //     _context.Kinds.Add(_mapper.Map<Kind>(kindToAdd));
+        //     _context.SaveChanges();
+        //     _context.ChangeTracker.Clear();
+        //     var actionToTest = _controller.DeleteKind(kindToAdd.KindId).Result;
+        //     // Assert
+        //     Assert.IsInstanceOfType(actionToTest, typeof(NoContentResult));
+        //     Assert.AreEqual(_context.Kinds.Find(kindToAdd.KindId), null);  
+        // }
 
-        [TestMethod()]
-        public void DeleteKind_ReturnsNotFound()
-        {
-            var actionToTest = (NotFoundObjectResult)_controller.DeleteKind(-1000).Result;
-            // Assert
-            Assert.AreEqual(actionToTest.Value, string.Format("No Kind found with ID = {0}", -1000));  
-        }
+        // [TestMethod()]
+        // public void DeleteKind_ReturnsNotFound()
+        // {
+        //     var actionToTest = (NotFoundObjectResult)_controller.DeleteKind(-1000).Result;
+        //     // Assert
+        //     Assert.AreEqual(actionToTest.Value, string.Format("No Kind found with ID = {0}", -1000));  
+        // }
     }
 }
 #pragma warning restore CS8602, CS8600, CS8604

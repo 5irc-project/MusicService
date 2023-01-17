@@ -35,7 +35,8 @@ namespace MusicServiceTest.Controller
                 );
                 _context.Kinds.AddRange(
                     new Kind { KindId = 1, Name = "KindUn"},
-                    new Kind { KindId = 2, Name = "KindDeux"}
+                    new Kind { KindId = 2, Name = "KindDeux"},
+                    new Kind { KindId = 3, Name = "KindDeux"}
                 );
                 for (int i = 1; i<6; i++){
                     _context.Tracks.Add(new Track(){ TrackId = i,  Acousticness = (float)0.1, ArtistName = "ArtistName" + i, Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "TrackName" + i, Valence = (float)0.1});
@@ -54,6 +55,7 @@ namespace MusicServiceTest.Controller
 
             _mapper = mappingConfig.CreateMapper();  
             _service = new PlaylistService(_context, _mapper, null, null);
+
         }
 
         [TestInitialize]
@@ -237,6 +239,7 @@ namespace MusicServiceTest.Controller
             _context.SaveChanges();
             _context.ChangeTracker.Clear();
             var actionToTest = (BadRequestObjectResult)_controller.PostPlaylist(playlistToPost).Result.Result;
+
             // Assert
             Assert.AreEqual(actionToTest.Value, string.Format("Playlist with ID = {0} already exists", playlistToPost.PlaylistId));        
         }
@@ -387,6 +390,61 @@ namespace MusicServiceTest.Controller
 
             // Assert
             Assert.AreEqual(actionToTest.Value, string.Format("At least one of the Track given wasn't found"));
+        }
+
+        [TestMethod()]
+        public void DeletePlaylists_ReturnsOk()
+        {
+            // Arrange
+            List<PlaylistDTO> listPlaylistToAdd = new List<PlaylistDTO>() {
+                new PlaylistDTO(){ PlaylistId = -2001, KindId = 1, UserId = 1001, PlaylistName = "PlaylistOne" },
+                new PlaylistDTO(){ PlaylistId = -2002, KindId = 1, UserId = 1001, PlaylistName = "PlaylistOne" },
+                new PlaylistDTO(){ PlaylistId = -2003, KindId = 1, UserId = 1, PlaylistName = "PlaylistOne" },
+                new PlaylistDTO(){ PlaylistId = -2004, KindId = 1, UserId = 1001, PlaylistName = "PlaylistOne" },
+            };
+
+            // Act
+            listPlaylistToAdd.ForEach(pToAdd => {
+                _context.Playlists.Add(_mapper.Map<Playlist>(pToAdd));
+            });
+            _context.SaveChanges();
+            _context.ChangeTracker.Clear();
+            var actionToTest = _controller.DeletePlaylists(1001).Result;
+
+            // Assert
+            Assert.IsInstanceOfType(actionToTest, typeof(NoContentResult));
+            Assert.AreEqual(_context.Playlists.Where(p => p.UserId == 1001).ToList().Count, 0);
+        }
+
+        [TestMethod()]
+        public void AddFavoritePlaylist_ReturnsOk()
+        {
+            // Act
+            var actionToTest = (CreatedAtActionResult)_controller.AddFavoritePlaylist(1001).Result.Result;
+            var resultToTest = (PlaylistDTO)actionToTest.Value;
+
+            Console.WriteLine("a");
+
+            // Assert
+            Assert.AreEqual(_context.Playlists.Find(resultToTest.PlaylistId).PlaylistName, "Favorite Musics");   
+            Assert.AreEqual(_context.Playlists.Find(resultToTest.PlaylistId).UserId, 1001);          
+            Assert.AreEqual(_context.Playlists.Find(resultToTest.PlaylistId).KindId, 3);          
+        }
+
+        [TestMethod()]
+        public void AddFavoritePlaylist_ReturnsAlreadyExists()
+        {
+            // Arrange
+            PlaylistDTO playlistToAdd = new PlaylistDTO(){ PlaylistId = -1050, KindId = 3, UserId = 50, PlaylistName = "Favorite Musics" };
+
+            // Act
+            _context.Playlists.Add(_mapper.Map<Playlist>(playlistToAdd));
+            _context.SaveChanges();
+            _context.ChangeTracker.Clear();
+            var actionToTest = (BadRequestObjectResult)_controller.AddFavoritePlaylist(50).Result.Result;
+
+            // Assert
+            Assert.AreEqual(actionToTest.Value, string.Format(string.Format("Favorite playlist already exists for User {0}", 50)));            
         }
     }
 }

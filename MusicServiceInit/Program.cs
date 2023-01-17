@@ -14,7 +14,6 @@ namespace MusicServiceInit
             #pragma warning disable CS8602
             var services = new ServiceCollection();
             services.AddDbContext<MusicServiceDBContext>(opt => opt.UseNpgsql("Server=localhost;port=8003;Database=MusicServiceDatabase;uid=root;password=root;"));
-
             var serviceProvider = services.BuildServiceProvider();
             _context = serviceProvider.GetService<MusicServiceDBContext>();
 
@@ -29,7 +28,8 @@ namespace MusicServiceInit
                 _context.TrackGenres.AddRange(listTrackGenreToAdd);
                 _context.Kinds.AddRange(new List<Kind> {
                     new Kind { KindId = 1, Name = "Generated"},
-                    new Kind { KindId = 2, Name = "Manual" }
+                    new Kind { KindId = 2, Name = "Manual" },
+                    new Kind { KindId = 3, Name = "Favorite" }
                 });
 
                 _context.SaveChanges();
