@@ -17,16 +17,20 @@ namespace MusicService.Message
             var connection = this.CreateConnection();
 
             if (connection != null){
-                using (var channel = connection.CreateModel()){
-                    var consumer = new EventingBasicConsumer(channel);
-                    consumer.Received += (sender, args) => { 
-                        ParseMessageAndInvokeMethod(channel, args); 
-                    };
-                    channel.BasicConsume(
-                        queue: _config.GetValue<string>("Queue:Name"),
-                        autoAck: true,
-                        consumer: consumer
-                    );
+                try{
+                    using (var channel = connection.CreateModel()){
+                        var consumer = new EventingBasicConsumer(channel);
+                        consumer.Received += (sender, args) => { 
+                            ParseMessageAndInvokeMethod(channel, args); 
+                        };
+                        channel.BasicConsume(
+                            queue: _config.GetValue<string>("Queue:Name"),
+                            autoAck: true,
+                            consumer: consumer
+                        );
+                    }
+                }catch{
+                    Console.WriteLine("Queue does not yet exist");
                 }
             }else{
                 // TODO : Notification ?
