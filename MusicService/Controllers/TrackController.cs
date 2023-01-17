@@ -143,7 +143,7 @@ namespace MusicService.Controllers
         // }
 
         // Get: api/Track/Playlists     
-        [HttpGet("Playlists")]
+        [HttpGet("Playlists/{id}")]
         public async Task<ActionResult<List<PlaylistDTO>>> GetTrackPlaylists(int id)
         {
             try{

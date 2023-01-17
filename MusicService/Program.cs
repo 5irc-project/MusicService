@@ -6,6 +6,7 @@ using MusicService.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MusicService.Message.Interfaces;
 using MusicService.Message.Implementations;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,3 +55,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// static ConnectToBrokerAndCreateQueue(){
+//     IConnection conn  = new ConnectionFactory { 
+//         HostName = _config.GetValue<string>("Queue:HostName"), 
+//         UserName = _config.GetValue<string>("Queue:UserName"),  
+//         Password = _config.GetValue<string>("Queue:Password"),  
+//         AutomaticRecoveryEnabled = true 
+//     }.CreateConnection();
+// }

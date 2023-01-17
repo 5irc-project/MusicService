@@ -15,6 +15,7 @@ namespace MusicService.Message.Implementations
         }
 
         private IConnection CreateConnection(){
+            Console.WriteLine("Message Producer LOGGING");
             try{
                 return new ConnectionFactory { 
                     HostName = _config.GetValue<string>("Queue:HostName"), 
