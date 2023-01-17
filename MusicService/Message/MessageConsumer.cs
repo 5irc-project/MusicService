@@ -48,7 +48,6 @@ namespace MusicService.Message
 
         private void ParseMessageAndInvokeMethod(IModel channel, BasicDeliverEventArgs args){
             var queueMessage = JsonConvert.DeserializeObject<QueueMessage<R>>(Encoding.UTF8.GetString(args.Body.ToArray()));
-
             if (queueMessage != null){
                 var method = typeof(T).GetMethod(queueMessage.Callback);
                 if (method != null && queueMessage.Obj != null){
