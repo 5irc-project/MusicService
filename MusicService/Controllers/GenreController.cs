@@ -34,49 +34,49 @@ namespace MusicService.Controllers
             }
         }
 
-        // PUT: api/Genre/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutGenre(int id, GenreDTO gDTO)
-        {
-            if (id != gDTO.GenreId) {
-                return BadRequest();
-            }
+        // // PUT: api/Genre/5
+        // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // [HttpPut("{id}")]
+        // public async Task<IActionResult> PutGenre(int id, GenreDTO gDTO)
+        // {
+        //     if (id != gDTO.GenreId) {
+        //         return BadRequest();
+        //     }
             
-            try{
-                await _service.PutGenre(id, gDTO);
-            }catch(NotFoundException e){
-                return NotFound(e.Content);
-            }
+        //     try{
+        //         await _service.PutGenre(id, gDTO);
+        //     }catch(NotFoundException e){
+        //         return NotFound(e.Content);
+        //     }
     
-            return NoContent();
-        }
+        //     return NoContent();
+        // }
 
-        // POST: api/Genre
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<GenreDTO>> PostGenre(GenreDTO gDTO)
-        {
-            try{
-                await _service.PostGenre(gDTO);
-            }catch(AlreadyExistsException e){
-                return BadRequest(e.Content);
-            }
+        // // POST: api/Genre
+        // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // [HttpPost]
+        // public async Task<ActionResult<GenreDTO>> PostGenre(GenreDTO gDTO)
+        // {
+        //     try{
+        //         await _service.PostGenre(gDTO);
+        //     }catch(AlreadyExistsException e){
+        //         return BadRequest(e.Content);
+        //     }
 
-            return CreatedAtAction("GetGenre", new { id = gDTO.GenreId }, gDTO);
-        }
+        //     return CreatedAtAction("GetGenre", new { id = gDTO.GenreId }, gDTO);
+        // }
 
-        // DELETE: api/Genre/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGenre(int id)
-        {
-            try{
-                await _service.DeleteGenre(id);
-            }catch (NotFoundException e){
-                return NotFound(e.Content);
-            }
+        // // DELETE: api/Genre/5
+        // [HttpDelete("{id}")]
+        // public async Task<IActionResult> DeleteGenre(int id)
+        // {
+        //     try{
+        //         await _service.DeleteGenre(id);
+        //     }catch (NotFoundException e){
+        //         return NotFound(e.Content);
+        //     }
 
-            return NoContent();
-        }
+        //     return NoContent();
+        // }
     }
 }

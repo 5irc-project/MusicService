@@ -15,5 +15,10 @@ namespace MusicService.Exceptions
             Content = string.Format("{0} with ID = {1} already exists", objectType, id);
             ReasonPhrase = string.Format("{0} Already Exists", objectType);
         }
+
+        public AlreadyExistsException(int userId) { // TODO : Should be generic, not tied to playlist (userdto ?)
+            Content = string.Format("Favorite playlist already exists for User {0}", userId);
+            ReasonPhrase = "Playlist Already Exists";
+        }
     }
 }

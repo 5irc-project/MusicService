@@ -65,6 +65,7 @@ namespace MusicService.Services.Implementations
                 .Include(p => p.Kind)
                 .Include(p => p.PlaylistTracks)
                 .Where(p => p.UserId == userId)
+                .AsNoTracking()
                 .ToListAsync();
             List<PlaylistWithTracksDTO> listPlaylistWithTrack = new List<PlaylistWithTracksDTO>();
 
@@ -211,6 +212,39 @@ namespace MusicService.Services.Implementations
             }catch(Exception e){
                 throw e;
             }
+        }
+
+        public async Task DeletePlaylists(int userId)
+        {
+            // TODO : Check user exists ?
+            List<PlaylistWithTracksDTO> listPlaylistUser = await this.GetPlaylistsByUser(userId);
+            if (listPlaylistUser != null && listPlaylistUser.Count != 0){
+                listPlaylistUser.ForEach(p => {
+                    _context.Playlists.Remove(_mapper.Map<Playlist>(p));
+                });
+                await _context.SaveChangesAsync();                
+            }
+        }
+
+        public async Task<PlaylistDTO> AddFavoritePlaylist(int userId)
+        {
+            // TODO : Check user exists ?
+            List<PlaylistWithTracksDTO> listPlaylistUser = await this.GetPlaylistsByUser(userId);
+            if (listPlaylistUser != null && listPlaylistUser.Count != 0){
+                if (listPlaylistUser.Any(p => p.PlaylistName == "Favorite Musics" && p.KindId == 3)){
+                    throw new AlreadyExistsException(userId);
+                }   
+            }
+
+            PlaylistDTO pDTO = new PlaylistDTO() {
+                KindId = 3,
+                PlaylistName = "Favorite Musics",
+                UserId = userId
+            };
+            Playlist p = _mapper.Map<Playlist>(pDTO);
+            _context.Playlists.Add(p);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<PlaylistDTO>(p);             
         }
     }
 }
