@@ -154,12 +154,25 @@ namespace MusicService.Controllers
         }
 
         [Authorize]
+        [HttpGet("{id}/IsInFavorite/")]
         public async Task<ActionResult<bool>> IsTrackInFavorite(int id){
             var userId = GetUserIdFromClaims();
-            return await _service.IsTrackInFavorite(id, userId);
+            try{
+                return await _service.IsTrackInFavorite(id, userId);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
         }
 
-        
+        [HttpGet("{id}/IsInPlaylist/{playlistId}")]
+        public async Task<ActionResult<bool>> IsTrackInPlaylist(int id, int playlistId){
+            try{
+                return await _service.IsTrackInPlaylist(id, playlistId);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
+        }
+
         private int GetUserIdFromClaims() {
             var id = User.Claims.First(c => c.Type == "UserId").Value;
             return int.Parse(id);
