@@ -130,13 +130,13 @@ namespace MusicService.Services.Implementations
 
         public async Task AddTracksToPlaylist(int id, List<TrackDTO> lTD)
         {
-            Playlist? p = await _context.Playlists.FindAsync(id);
+            Playlist? p = await _context.Playlists.FirstOrDefaultAsync(p => p.PlaylistId == id);
             
             if (p != null){
                 // If every genre exists and the track isn't null
                 if (lTD.All(tDTO => _context.Tracks.AsNoTracking().FirstOrDefault(t => t.TrackId == tDTO.TrackId) != null) == true && p != null){
-                    lTD.ForEach(async tDTO => {
-                        Track? t = await _context.Tracks.FindAsync(tDTO.TrackId);
+                    foreach(var tDTO in lTD){
+                        Track? t = await _context.Tracks.FirstOrDefaultAsync(t => t.TrackId == tDTO.TrackId);
                         #pragma warning disable CS8601
                         if (_context.PlaylistTracks.FirstOrDefault(pt => pt.PlaylistId == id && pt.TrackId == tDTO.TrackId) == null){
                             _context.PlaylistTracks.Add(new PlaylistTrack {
@@ -147,7 +147,7 @@ namespace MusicService.Services.Implementations
                             });
                         }
                         #pragma warning restore CS8601
-                    });
+                    }
                     await _context.SaveChangesAsync();
                 }else{
                     throw new NotFoundException(nameof(Track));
