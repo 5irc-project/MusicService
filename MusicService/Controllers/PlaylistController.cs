@@ -75,6 +75,8 @@ namespace MusicService.Controllers
                 return CreatedAtAction("GetPlaylist", new { id = playlist.PlaylistId }, playlist);
             }catch(AlreadyExistsException e){
                 return BadRequest(e.Content);
+            }catch(BadRequestException e){
+                return BadRequest(e.Content);
             }
         }
 

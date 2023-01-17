@@ -105,6 +105,11 @@ namespace MusicService.Services.Implementations
 
         public async Task<PlaylistDTO> PostPlaylist(PlaylistDTO pDTO)
         {
+            // Check if user exists instead !
+            if (pDTO.UserId == 0){
+                throw new BadRequestException("Please provide a user Id in your request");
+            }
+
             if (_context.Playlists.FirstOrDefault(p => p.PlaylistId == pDTO.PlaylistId) != null){
                 throw new AlreadyExistsException(nameof(Playlist), pDTO.PlaylistId);
             }

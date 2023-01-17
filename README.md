@@ -15,3 +15,4 @@ Return message that states what happened when adding / removing genres ? (yes)
 Faut trouver comment lancer la migration au lancement et tt ça
 Comment test le truc ac Authorize ?
 Test les deux nouvelles methodes
+Faire un discovery dev
