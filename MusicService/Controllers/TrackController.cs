@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MusicService.DTOs;
 using MusicService.Exceptions;
@@ -151,6 +152,17 @@ namespace MusicService.Controllers
                 return NotFound(e.Content);
             }
         }
+
+        [Authorize]
+        public async Task<ActionResult<bool>> IsTrackInFavorite(int id){
+            var userId = GetUserIdFromClaims();
+            return await _service.IsTrackInFavorite(id, userId);
+        }
+
         
+        private int GetUserIdFromClaims() {
+            var id = User.Claims.First(c => c.Type == "UserId").Value;
+            return int.Parse(id);
+        }        
     }
 }

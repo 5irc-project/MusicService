@@ -20,5 +20,10 @@ namespace MusicService.Exceptions
             Content = string.Format("At least one of the {0} given wasn't found", objectType);
             ReasonPhrase = string.Format("{0} Not Found", objectType);
         }
+
+        public NotFoundException(int userId) {
+            Content = string.Format("Favorite playlist for the User with ID = {0} not found", userId);
+            ReasonPhrase = "Playlist Not Found";
+        }
     }
 }

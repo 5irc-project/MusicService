@@ -48,12 +48,10 @@ namespace MusicService.Services.Implementations
                 throw new NotFoundException(id, nameof(Playlist));
             }
             PlaylistWithTracksDTO pwtDTO = _mapper.Map<PlaylistWithTracksDTO>(p);
-            pwtDTO.Tracks = new List<TrackDTO>();
+            pwtDTO.Tracks = new List<TrackWithGenresDTO>();
             #pragma warning disable CS8602
             foreach(PlaylistTrack playlistTrack in p.PlaylistTracks){
-                pwtDTO.Tracks.Add(
-                    _mapper.Map<TrackDTO>(_context.Tracks.Find(playlistTrack.TrackId))
-                );
+                pwtDTO.Tracks.Add(_trackService.GetTrack(playlistTrack.TrackId).Result);
             }
             #pragma warning restore CS8602  
             return pwtDTO;
@@ -71,12 +69,10 @@ namespace MusicService.Services.Implementations
 
             listPlaylist.ForEach(p => {
                 PlaylistWithTracksDTO pwtDTO = _mapper.Map<PlaylistWithTracksDTO>(p);
-                pwtDTO.Tracks = new List<TrackDTO>();
+                pwtDTO.Tracks = new List<TrackWithGenresDTO>();
                 #pragma warning disable CS8602
                 foreach(PlaylistTrack playlistTrack in p.PlaylistTracks){
-                    pwtDTO.Tracks.Add(
-                        _mapper.Map<TrackDTO>(_context.Tracks.Find(playlistTrack.TrackId))
-                    );
+                    pwtDTO.Tracks.Add(_trackService.GetTrack(playlistTrack.TrackId).Result);
                 }
                 #pragma warning restore CS8602  
                 listPlaylistWithTrack.Add(pwtDTO);
@@ -93,11 +89,11 @@ namespace MusicService.Services.Implementations
             List<PlaylistWithTracksDTO> lpwtDTO = new List<PlaylistWithTracksDTO>();
             lP.ForEach(p => {
                 PlaylistWithTracksDTO pwtDTO = _mapper.Map<PlaylistWithTracksDTO>(p);
-                pwtDTO.Tracks = new List<TrackDTO>();
+                pwtDTO.Tracks = new List<TrackWithGenresDTO>();
                 #pragma warning disable CS8602
                 foreach(PlaylistTrack playlistTrack in p.PlaylistTracks){
                     pwtDTO.Tracks.Add(
-                        _mapper.Map<TrackDTO>(_context.Tracks.Find(playlistTrack.TrackId))
+                       _trackService.GetTrack(playlistTrack.TrackId).Result
                     );
                 }
                 #pragma warning restore CS8602

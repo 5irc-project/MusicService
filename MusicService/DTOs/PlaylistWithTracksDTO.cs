@@ -9,7 +9,7 @@ namespace MusicService.DTOs
         public int UserId { get; set; }
         public int KindId { get; set; }
         public string? PlaylistName { get; set; }
-        public virtual ICollection<TrackDTO> Tracks { get; set; } = null!;
+        public virtual ICollection<TrackWithGenresDTO> Tracks { get; set; } = null!;
 
         #pragma warning disable CS8765
         public override bool Equals(Object obj){
