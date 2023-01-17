@@ -6,7 +6,6 @@ using MusicService.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MusicService.Message.Interfaces;
 using MusicService.Message.Implementations;
-using MusicService.Message;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -14,26 +14,36 @@ namespace MusicService.Message
             _context = context;
             _config = config;
 
-            using (var channel = this.CreateConnection().CreateModel()){
-                var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (sender, args) => { 
-                    ParseMessageAndInvokeMethod(channel, args); 
-                };
-                channel.BasicConsume(
-                    queue: _config.GetValue<string>("Queue:Name"),
-                    autoAck: true,
-                    consumer: consumer
-                );
+            var connection = this.CreateConnection();
+
+            if (connection != null){
+                using (var channel = connection.CreateModel()){
+                    var consumer = new EventingBasicConsumer(channel);
+                    consumer.Received += (sender, args) => { 
+                        ParseMessageAndInvokeMethod(channel, args); 
+                    };
+                    channel.BasicConsume(
+                        queue: _config.GetValue<string>("Queue:Name"),
+                        autoAck: true,
+                        consumer: consumer
+                    );
+                }
+            }else{
+                // TODO : Notification ?
             }
         }
 
         private IConnection CreateConnection(){
-            return new ConnectionFactory { 
-                HostName = _config.GetValue<string>("Queue:HostName"), 
-                UserName = _config.GetValue<string>("Queue:UserName"),  
-                Password = _config.GetValue<string>("Queue:Password"),  
-                AutomaticRecoveryEnabled = true 
-            }.CreateConnection();
+            try{
+                return new ConnectionFactory { 
+                    HostName = _config.GetValue<string>("Queue:HostName"), 
+                    UserName = _config.GetValue<string>("Queue:UserName"),  
+                    Password = _config.GetValue<string>("Queue:Password"),  
+                    AutomaticRecoveryEnabled = true 
+                }.CreateConnection();
+            }catch{
+                return null;
+            }
         }
 
         private void ParseMessageAndInvokeMethod(IModel channel, BasicDeliverEventArgs args){

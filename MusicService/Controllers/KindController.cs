@@ -34,48 +34,48 @@ namespace MusicService.Controllers
             }
         }
 
-        // PUT: api/Kind/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutKind(int id, KindDTO kDTO)
-        {
-            if (id != kDTO.KindId) {
-                return BadRequest();
-            }
+        // // PUT: api/Kind/5
+        // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // [HttpPut("{id}")]
+        // public async Task<IActionResult> PutKind(int id, KindDTO kDTO)
+        // {
+        //     if (id != kDTO.KindId) {
+        //         return BadRequest();
+        //     }
             
-            try{
-                await _service.PutKind(id, kDTO);
-            }catch(NotFoundException e){
-                return NotFound(e.Content);
-            }
+        //     try{
+        //         await _service.PutKind(id, kDTO);
+        //     }catch(NotFoundException e){
+        //         return NotFound(e.Content);
+        //     }
     
-            return NoContent();
-        }
+        //     return NoContent();
+        // }
 
-        // POST: api/Kind
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<KindDTO>> PostKind(KindDTO kDTO)
-        {
-            try{
-                await _service.PostKind(kDTO);
-            }catch(AlreadyExistsException e){
-                return BadRequest(e.Content);
-            }
-            return CreatedAtAction("GetKind", new { id = kDTO.KindId }, kDTO);
-        }
+        // // POST: api/Kind
+        // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // [HttpPost]
+        // public async Task<ActionResult<KindDTO>> PostKind(KindDTO kDTO)
+        // {
+        //     try{
+        //         await _service.PostKind(kDTO);
+        //     }catch(AlreadyExistsException e){
+        //         return BadRequest(e.Content);
+        //     }
+        //     return CreatedAtAction("GetKind", new { id = kDTO.KindId }, kDTO);
+        // }
 
-        // DELETE: api/Kind/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteKind(int id)
-        {
-            try{
-                await _service.DeleteKind(id);
-            }catch (NotFoundException e){
-                return NotFound(e.Content);
-            }
+        // // DELETE: api/Kind/5
+        // [HttpDelete("{id}")]
+        // public async Task<IActionResult> DeleteKind(int id)
+        // {
+        //     try{
+        //         await _service.DeleteKind(id);
+        //     }catch (NotFoundException e){
+        //         return NotFound(e.Content);
+        //     }
 
-            return NoContent();
-        }
+        //     return NoContent();
+        // }
     }
 }

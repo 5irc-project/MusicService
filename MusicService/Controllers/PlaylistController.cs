@@ -117,11 +117,31 @@ namespace MusicService.Controllers
         }
 
         // POST: api/Recommendation
-        [HttpPost("/Recommendation")]
+        [HttpPost("Recommendation")]
         public IActionResult GeneratePlaylist(List<TrackDTO> listTrack)
         {
             _messageProducer.ProduceMessage(new QueueMessage<List<TrackDTO>>(listTrack, nameof(GeneratePlaylist)));
             return Accepted();
+        }  
+
+        // POST: api/Playlist/private/{userId}
+        [HttpPost("private/{userId}")]
+        public async Task<ActionResult<PlaylistDTO>> AddFavoritePlaylist(int userId)
+        {
+            try{
+                PlaylistDTO playlist = await _service.AddFavoritePlaylist(userId);
+                return CreatedAtAction("GetPlaylist", new { id = playlist.PlaylistId }, playlist);
+            }catch(AlreadyExistsException e){
+                return BadRequest(e.Content);
+            }
+        }  
+
+        // POST: api/Playlist/private/5
+        [HttpDelete("private/{userId}")]
+        public async Task<IActionResult> DeletePlaylists(int userId)
+        {
+            await _service.DeletePlaylists(userId);
+            return NoContent();
         }  
     }
 }
