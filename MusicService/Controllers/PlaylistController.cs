@@ -127,6 +127,20 @@ namespace MusicService.Controllers
             return Accepted();
         }
 
+        // POST: api/Recommendation
+        [Authorize]
+        [HttpPost("Recommendation/Dev")]
+        public async Task<IActionResult> GeneratePlaylistDev(List<TrackDTO> listTrack) // TO REMOVE
+        {
+            try{
+                var userId = GetUserIdFromClaims();
+                PlaylistDTO pCreated = await _service.GeneratePlaylistDev(listTrack, userId);
+                return CreatedAtAction("GetPlaylist", new { id = pCreated.PlaylistId }, pCreated);
+            }catch(BadRequestException e){
+                return BadRequest(e.Content);
+            }
+        }
+
         // POST: api/Playlist/private/{userId}
         [HttpPost("private/{userId}")]
         public async Task<ActionResult<PlaylistDTO>> AddFavoritePlaylist(int userId)

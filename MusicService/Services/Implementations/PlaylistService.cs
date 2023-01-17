@@ -212,6 +212,33 @@ namespace MusicService.Services.Implementations
             }
         }
 
+        public async Task<PlaylistDTO> GeneratePlaylistDev(List<TrackDTO> listTrack, int userId) // TO REMOVE
+        {
+            try{
+                var rand = new Random();
+                if (listTrack.Count == 0){
+                    throw new BadRequestException("Please provide at least one tracks");
+                }
+
+                string genrePredicted = "Electronic";
+
+                var g = _context.Genres.FirstOrDefault(g => g.Name == genrePredicted);
+                
+                GenreDTO gDTO = _mapper.Map<GenreDTO>(g);
+                List<TrackWithGenresDTO> listTrackWithGenre = await _trackService.GetTracksByGenre(gDTO.GenreId);
+                List<TrackWithGenresDTO> listTrackWithGenreRandom = listTrackWithGenre.OrderBy(x => rand.Next()).Take(20).ToList();
+                var action = await this.PostPlaylist(new PlaylistDTO() {
+                    KindId = 1,
+                    PlaylistName = "Testing",
+                    UserId = userId
+                });
+                await this.AddTracksToPlaylist(action.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));
+                return action;
+            }catch(Exception e){
+                throw e;
+            }
+        }
+
         public async Task DeletePlaylists(int userId)
         {
             // TODO : Check user exists ?
