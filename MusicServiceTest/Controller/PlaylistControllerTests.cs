@@ -9,7 +9,7 @@ using MusicService.DTOs;
 using MusicService.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
-#pragma warning disable CS8602, CS8600, CS8604
+#pragma warning disable CS8602, CS8600, CS8604, CS8625
 namespace MusicServiceTest.Controller
 {
     [TestClass()]
@@ -53,12 +53,12 @@ namespace MusicServiceTest.Controller
             }
 
             _mapper = mappingConfig.CreateMapper();  
-            _service = new PlaylistService(_context, _mapper);
+            _service = new PlaylistService(_context, _mapper, null, null);
         }
 
         [TestInitialize]
         public void Setup(){
-            _controller = new PlaylistController(_service);
+            _controller = new PlaylistController(_service, null);
         }
 
         [TestCleanup]
@@ -146,14 +146,14 @@ namespace MusicServiceTest.Controller
         }
 
         [TestMethod()]
-        public void GetTrackByQueryName_ReturnsOk()
+        public void GetPlaylistByUser_ReturnsOk()
         {
             // Arrange
             List<PlaylistDTO> listPlaylistToAdd = new List<PlaylistDTO>() {
-                new PlaylistDTO(){ PlaylistId = -101, KindId = 1, UserId = 0, PlaylistName = "PlaylistOne" },
-                new PlaylistDTO(){ PlaylistId = -102, KindId = 1, UserId = 0, PlaylistName = "PlaylistOne" },
+                new PlaylistDTO(){ PlaylistId = -101, KindId = 1, UserId = 1000, PlaylistName = "PlaylistOne" },
+                new PlaylistDTO(){ PlaylistId = -102, KindId = 1, UserId = 1000, PlaylistName = "PlaylistOne" },
                 new PlaylistDTO(){ PlaylistId = -103, KindId = 1, UserId = 1, PlaylistName = "PlaylistOne" },
-                new PlaylistDTO(){ PlaylistId = -104, KindId = 1, UserId = 0, PlaylistName = "PlaylistOne" }
+                new PlaylistDTO(){ PlaylistId = -104, KindId = 1, UserId = 1000, PlaylistName = "PlaylistOne" }
             };
 
             // Act
@@ -161,7 +161,7 @@ namespace MusicServiceTest.Controller
                 _context.Playlists.Add(_mapper.Map<Playlist>(playlistToAdd));
             });
             _context.SaveChanges();
-            List<PlaylistWithTracksDTO> listPlaylistToTestWithTracks = _controller.GetPlaylistsByUser(0).Result.Value;
+            List<PlaylistWithTracksDTO> listPlaylistToTestWithTracks = _controller.GetPlaylistsByUser(1000).Result.Value;
 
             // Assert
             Assert.AreEqual(listPlaylistToTestWithTracks.Count, 3);
@@ -390,4 +390,4 @@ namespace MusicServiceTest.Controller
         }
     }
 }
-#pragma warning restore CS8602, CS8600, CS8604
+#pragma warning restore CS8602, CS8600, CS8604, CS8625

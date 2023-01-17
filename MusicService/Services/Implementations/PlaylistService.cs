@@ -4,18 +4,26 @@ using MusicService.DTOs;
 using MusicService.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using MusicService.RestConsumer;
+using MusicService.Message;
 
 namespace MusicService.Services.Implementations
 {
     public class PlaylistService : IPlaylistService
     {
+        private readonly IConfiguration _config;
         private readonly MusicServiceDBContext _context;
         private readonly IMapper _mapper;
+        private readonly ITrackService _trackService;
+        private readonly MessageConsumer<PlaylistService, List<TrackDTO>> _messageConsumer;
 
-        public PlaylistService(MusicServiceDBContext context, IMapper mapper)
+        public PlaylistService(MusicServiceDBContext context, IMapper mapper, ITrackService trackService, IConfiguration config)
         {
             _context = context;
             _mapper = mapper;
+            _trackService = trackService;
+            _config = config;
+            _messageConsumer = new MessageConsumer<PlaylistService, List<TrackDTO>>(this, _config); // TODO : Remove config ?
         }
 
         public async Task DeletePlaylist(int id)
@@ -169,6 +177,39 @@ namespace MusicService.Services.Implementations
                 }
             }else{
                 throw new NotFoundException(id, nameof(Playlist));
+            }
+        }
+
+        public async Task GeneratePlaylist(List<TrackDTO> listTrack)
+        {
+            // TODO : Fix it it's ugly
+            try{
+                var rand = new Random();
+                if (listTrack.Count == 0){
+                    throw new BadRequestException("Please provide at least ten tracks");
+                }
+
+                var genrePredicted = await MLService.PredictGenre(_mapper.Map<List<TrackMachineLearningDTO>>(listTrack));
+                if (genrePredicted == null){
+                    throw new BadRequestException("Couldn't predict a genre");
+                }
+
+                var g = _context.Genres.FirstOrDefault(g => g.Name == genrePredicted.Name);
+                if (g == null){
+                    throw new NotFoundException(genrePredicted.Name, nameof(Genre));
+                }
+                
+                GenreDTO gDTO = _mapper.Map<GenreDTO>(g);
+                List<TrackWithGenresDTO> listTrackWithGenre = await _trackService.GetTracksByGenre(gDTO.GenreId);
+                List<TrackWithGenresDTO> listTrackWithGenreRandom = listTrackWithGenre.OrderBy(x => rand.Next()).Take(20).ToList();
+                var action = await this.PostPlaylist(new PlaylistDTO() {
+                    KindId = 1,
+                    PlaylistName = "Testing",
+                    UserId = 0
+                });
+                await this.AddTracksToPlaylist(action.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));
+            }catch(Exception e){
+                throw e;
             }
         }
     }

@@ -7,19 +7,29 @@ namespace MusicService.Message.Implementations
 {
     public class MessageProducer : IMessageProducer
     {
+        private readonly IConfiguration _config;
         private readonly IConnection _conn;
-        public MessageProducer (){
-            var factory = new ConnectionFactory { HostName = "localhost", UserName = "root", Password = "root", AutomaticRecoveryEnabled = true };
-            _conn = factory.CreateConnection();
+        public MessageProducer (IConfiguration config){
+            _config = config;
+            _conn = this.CreateConnection();
+        }
+
+        private IConnection CreateConnection(){
+            return new ConnectionFactory { 
+                HostName = _config.GetValue<string>("Queue:HostName"), 
+                UserName = _config.GetValue<string>("Queue:UserName"),  
+                Password = _config.GetValue<string>("Queue:Password"),  
+                AutomaticRecoveryEnabled = true 
+            }.CreateConnection();
         }
         
         public void ProduceMessage<T>(T message)
         {
             using (var channel = _conn.CreateModel()){
-                channel.QueueDeclare("queue/MusicQueue", true, false, false, null);
+                channel.QueueDeclare(_config.GetValue<string>("Queue:Name"), true, false, false, null);
                 var json = JsonConvert.SerializeObject(message);
                 var body = Encoding.UTF8.GetBytes(json);
-                channel.BasicPublish(exchange: "", routingKey: "queue/MusicQueue", body: body);
+                channel.BasicPublish(exchange: "", routingKey: _config.GetValue<string>("Queue:Name"), body: body);
             }
         }
     }

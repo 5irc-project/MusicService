@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using MusicService.DTOs;
 using MusicService.Exceptions;
+using MusicService.Message;
+using MusicService.Message.Interfaces;
+using MusicService.Services;
 using MusicService.Services.Interfaces;
 
 namespace MusicService.Controllers
@@ -10,10 +13,12 @@ namespace MusicService.Controllers
     public class PlaylistController : ControllerBase
     {
         private readonly IPlaylistService _service;
+        private readonly IMessageProducer _messageProducer;
 
-        public PlaylistController(IPlaylistService service)
+        public PlaylistController(IPlaylistService service, IMessageProducer messageProducer)
         {
             _service = service;
+            _messageProducer = messageProducer;
         }
 
         // GET: api/Playlist
@@ -110,5 +115,13 @@ namespace MusicService.Controllers
 
             return NoContent();
         }
+
+        // POST: api/Recommendation
+        [HttpPost("/Recommendation")]
+        public IActionResult GeneratePlaylist(List<TrackDTO> listTrack)
+        {
+            _messageProducer.ProduceMessage(new QueueMessage<List<TrackDTO>>(listTrack, nameof(GeneratePlaylist)));
+            return Accepted();
+        }  
     }
 }

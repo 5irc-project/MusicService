@@ -1,42 +1,51 @@
 using System.Text;
-using MusicService.Message.Interfaces;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using MusicService.Services.Implementations;
-using System.Reflection;
-using MusicService.DTOs;
+
 
 namespace MusicService.Message
 {
     public class MessageConsumer<T, R>
     {
-        private readonly IConnection _conn;
+        private readonly IConfiguration _config;
         private readonly object _context;
-        public MessageConsumer (object context){
+        public MessageConsumer (object context, IConfiguration config){
             _context = context;
+            _config = config;
 
-            var factory = new ConnectionFactory { HostName = "localhost", UserName = "root", Password = "root", AutomaticRecoveryEnabled = true };
-            _conn = factory.CreateConnection();
-            using (var channel = _conn.CreateModel()){
+            using (var channel = this.CreateConnection().CreateModel()){
                 var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (ch, ea) =>
-                                {
-                                    var body = ea.Body.ToArray();
-                                    var message = Encoding.UTF8.GetString(body);
-                                    var test = JsonConvert.DeserializeObject<QueueMessage<R>>(message);
-
-                                    var res = typeof(T).GetMethod(test._callback);
-                                    var res2 = res.Invoke(context, new object[] { test._obj });
-                                };
-                channel.BasicConsume(queue: "queue/MusicQueue",
-                                 autoAck: true,
-                                 consumer: consumer);
+                consumer.Received += (sender, args) => { 
+                    ParseMessageAndInvokeMethod(channel, args); 
+                };
+                channel.BasicConsume(
+                    queue: _config.GetValue<string>("Queue:Name"),
+                    autoAck: true,
+                    consumer: consumer
+                );
             }
         }
 
-        private void mettredansunefction(){
-            // mettre dedans a partir du received
+        private IConnection CreateConnection(){
+            return new ConnectionFactory { 
+                HostName = _config.GetValue<string>("Queue:HostName"), 
+                UserName = _config.GetValue<string>("Queue:UserName"),  
+                Password = _config.GetValue<string>("Queue:Password"),  
+                AutomaticRecoveryEnabled = true 
+            }.CreateConnection();
+        }
+
+        private void ParseMessageAndInvokeMethod(IModel channel, BasicDeliverEventArgs args){
+            var queueMessage = JsonConvert.DeserializeObject<QueueMessage<R>>(Encoding.UTF8.GetString(args.Body.ToArray()));
+
+            if (queueMessage != null){
+                var method = typeof(T).GetMethod(queueMessage.Callback);
+                if (method != null && queueMessage.Obj != null){
+                    method.Invoke(_context, new object[] { queueMessage.Obj });
+                }
+            }
+            // TODO : Notification if problem ?
         }
     }
 }

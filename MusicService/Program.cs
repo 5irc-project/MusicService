@@ -6,6 +6,7 @@ using MusicService.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MusicService.Message.Interfaces;
 using MusicService.Message.Implementations;
+using MusicService.Message;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,6 @@ builder.Services.AddScoped<IGenreService, GenreService>();
 builder.Services.AddScoped<IKindService, KindService>();
 builder.Services.AddScoped<ITrackService, TrackService>();
 builder.Services.AddScoped<IPlaylistService, PlaylistService>();
-builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 builder.Services.AddScoped<IMessageProducer, MessageProducer>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

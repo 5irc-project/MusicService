@@ -4,12 +4,12 @@ namespace MusicService.Message
 {
     public class QueueMessage<T>
     {
-        public T _obj { get; set; }
-        public string _callback { get; set; }
+        public T Obj { get; set; }
+        public string Callback { get; set; }
 
         public QueueMessage(T obj, string callback){
-            _obj = obj;
-            _callback = callback;
+            Obj = obj;
+            Callback = callback;
         }
     }
 }
