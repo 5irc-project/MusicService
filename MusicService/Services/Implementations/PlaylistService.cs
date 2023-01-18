@@ -291,5 +291,30 @@ namespace MusicService.Services.Implementations
             return _mapper.Map<List<PlaylistDTO>>(_mapper.Map<List<Playlist>>(listP));
         }
 
+        public async Task AddTrackToFavoritePlaylist(int userId, TrackDTO track)
+        {
+            Playlist? p = await _context.Playlists
+                .Where(p => p.UserId == userId && p.KindId == 3)
+                .FirstOrDefaultAsync();
+
+            if (p != null){
+                await this.AddTracksToPlaylist(p.PlaylistId, new List<TrackDTO>(){ track });
+            }else{
+                throw new NotFoundException(userId);
+            }
+        }
+
+        public async Task RemoveTrackFromFavoritePlaylist(int userId, TrackDTO track)
+        {
+            Playlist? p = await _context.Playlists
+                .Where(p => p.UserId == userId && p.KindId == 3)
+                .FirstOrDefaultAsync();
+
+            if (p != null){
+                await this.RemoveTracksFromPlaylist(p.PlaylistId, new List<TrackDTO>(){ track });
+            }else{
+                throw new NotFoundException(userId);
+            }
+        }
     }
 }

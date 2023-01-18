@@ -106,6 +106,34 @@ namespace MusicService.Controllers
             return NoContent();
         }
 
+        [HttpPost("PlaylistTrack/Add/Favorite")]
+        // [Authorize]
+        public async Task<IActionResult> AddTrackToFavoritePlaylist(TrackDTO trackDTO)
+        {
+            try{
+                var userId = GetUserIdFromClaims();
+                await _service.AddTrackToFavoritePlaylist(userId, trackDTO);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
+
+            return NoContent();
+        }
+
+        [HttpPost("PlaylistTrack/Remove/Favorite")]
+        [Authorize]
+        public async Task<IActionResult> RemoveTrackFromFavoritePlaylist(TrackDTO trackDTO)
+        {
+            try{
+                var userId = GetUserIdFromClaims();
+                await _service.RemoveTrackFromFavoritePlaylist(userId, trackDTO);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
+
+            return NoContent();
+        }
+
         // PUT: api/Playlist/PlaylistTrack/Remove/5
         [HttpPost("PlaylistTrack/Remove/{id}")]
         public async Task<IActionResult> RemoveTracksFromPlaylist(int id, List<TrackDTO> lTD)

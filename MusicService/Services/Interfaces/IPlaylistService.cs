@@ -17,5 +17,7 @@ namespace MusicService.Services.Interfaces
         Task<PlaylistDTO> GeneratePlaylistDev(List<TrackDTO> listTrack, int userId); // TO REMOVE
         Task<PlaylistDTO> AddFavoritePlaylist(int userId);
         Task<List<PlaylistDTO>> GetPlaylistsWithoutTrackForUser(int trackId, int userId);
+        Task AddTrackToFavoritePlaylist(int userId, TrackDTO track);
+        Task RemoveTrackFromFavoritePlaylist(int userId, TrackDTO track);
     }
 }
