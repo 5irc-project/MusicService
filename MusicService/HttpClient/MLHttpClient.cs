@@ -10,7 +10,7 @@ namespace MusicService.HttpClient
 
         public MLHttpClient(IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
-            BASE_PATH = configuration["Http:MLService"];
+            BASE_PATH = configuration["Http:MLService:Host"];
             _httpClientFactory = httpClientFactory;
         }
 
