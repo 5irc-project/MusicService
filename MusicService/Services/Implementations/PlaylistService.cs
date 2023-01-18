@@ -4,9 +4,9 @@ using MusicService.DTOs;
 using MusicService.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using MusicService.RestConsumer;
 using MassTransit;
 using MusicService.Message;
+using MusicService.HttpClient;
 
 namespace MusicService.Services.Implementations
 {
@@ -16,15 +16,17 @@ namespace MusicService.Services.Implementations
         private readonly MusicServiceDBContext _context;
         private readonly IMapper _mapper;
         private readonly ITrackService _trackService;
+        private readonly IMLHttpClient _MLHttpClient;
         private IBus _bus;
 
-        public PlaylistService(MusicServiceDBContext context, IMapper mapper, ITrackService trackService, IConfiguration config, IBus bus)
+        public PlaylistService(MusicServiceDBContext context, IMapper mapper, ITrackService trackService, IConfiguration config, IBus bus, IMLHttpClient MLHttpClient)
         {
             _context = context;
             _mapper = mapper;
             _trackService = trackService;
             _config = config;
             _bus = bus;
+            _MLHttpClient = MLHttpClient;
         }
 
         public async Task DeletePlaylist(int id)
@@ -192,7 +194,7 @@ namespace MusicService.Services.Implementations
                     throw new BadRequestException("Please provide at least ten tracks");
                 }
 
-                var genrePredicted = await MLService.PredictGenre(_mapper.Map<List<TrackMachineLearningDTO>>(listTrack));
+                var genrePredicted = await _MLHttpClient.PredictGenre(_mapper.Map<List<TrackMachineLearningDTO>>(listTrack));
                 if (genrePredicted == null){
                     throw new BadRequestException("Couldn't predict a genre");
                 }
@@ -237,7 +239,7 @@ namespace MusicService.Services.Implementations
                     UserId = userId
                 });
                 await this.AddTracksToPlaylist(action.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));
-                var endpoint = await _bus.GetSendEndpoint(new Uri("queue:NotificationQueue"));
+                var endpoint = await _bus.GetSendEndpoint(new Uri(_config["RabbitMQ:Notification"]));
                 await endpoint.Send<MessageNotificationQueue>(new MessageNotificationQueue(userId, true));
                 return action;
             }catch(Exception e){

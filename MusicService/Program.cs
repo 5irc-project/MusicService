@@ -6,7 +6,7 @@ using MusicService.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MassTransit;
 using System.Reflection;
-using MusicService.Message;
+using MusicService.HttpClient;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +16,7 @@ builder.Services.AddMassTransit(x => {
     x.AddConsumers(entryAssembly);
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host(builder.Configuration["Queue:RabbitMQHost"], "/", h => { 
+        cfg.Host(builder.Configuration["RabbitMQ:host"], "/", h => { 
             h.Username("root");
             h.Password("root");
         });
@@ -27,6 +27,7 @@ builder.Services.AddMassTransit(x => {
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 builder.Services.AddDbContext<MusicServiceDBContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("MusicServiceDBContext")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -34,6 +35,7 @@ builder.Services.AddScoped<IGenreService, GenreService>();
 builder.Services.AddScoped<IKindService, KindService>();
 builder.Services.AddScoped<ITrackService, TrackService>();
 builder.Services.AddScoped<IPlaylistService, PlaylistService>();
+builder.Services.AddScoped<IMLHttpClient, MLHttpClient>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);

@@ -56,7 +56,7 @@ namespace MusicServiceTest.Controller
 
             _mapper = mappingConfig.CreateMapper(); 
             _trackService = new TrackService(_context, _mapper); 
-            _service = new PlaylistService(_context, _mapper, _trackService, null, null);
+            _service = new PlaylistService(_context, _mapper, _trackService, null, null, null);
 
         }
 
