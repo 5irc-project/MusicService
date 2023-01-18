@@ -209,7 +209,7 @@ namespace MusicService.Services.Implementations
                 List<TrackWithGenresDTO> listTrackWithGenreRandom = listTrackWithGenre.OrderBy(x => rand.Next()).Take(20).ToList();
                 var action = await this.PostPlaylist(new PlaylistDTO() {
                     KindId = 1,
-                    PlaylistName = "Testing",
+                    PlaylistName = "Discovery",
                     UserId = 0
                 });
                 await this.AddTracksToPlaylist(action.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));
