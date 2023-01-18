@@ -107,9 +107,10 @@ namespace MusicService.Controllers
         }
 
         [HttpPost("PlaylistTrack/Add/Favorite")]
-        // [Authorize]
+        [Authorize]
         public async Task<IActionResult> AddTrackToFavoritePlaylist(TrackDTO trackDTO)
         {
+            // Check user exists ?
             try{
                 var userId = GetUserIdFromClaims();
                 await _service.AddTrackToFavoritePlaylist(userId, trackDTO);
@@ -124,6 +125,7 @@ namespace MusicService.Controllers
         [Authorize]
         public async Task<IActionResult> RemoveTrackFromFavoritePlaylist(TrackDTO trackDTO)
         {
+            // Check user exists ?
             try{
                 var userId = GetUserIdFromClaims();
                 await _service.RemoveTrackFromFavoritePlaylist(userId, trackDTO);

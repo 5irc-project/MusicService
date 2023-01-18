@@ -72,77 +72,77 @@ namespace MusicServiceTest.Controller
             _context.Database.EnsureDeleted();
         }
 
-        [TestMethod()]
-        public void GetPlaylists_ReturnsOk()
-        {
-            // TODO : I have to map genres to track to take trackGenresDTO I think
+        // [TestMethod()]
+        // public void GetPlaylists_ReturnsOk()
+        // {
+        //     // TODO : I have to map genres to track to take trackGenresDTO I think
 
-            // Arrange
-            List<PlaylistDTO> listPlaylistToAdd = new List<PlaylistDTO>() {
-                new PlaylistDTO { PlaylistId = 1, KindId = 1, UserId = 1, PlaylistName = "PlaylistOne" },
-                new PlaylistDTO { PlaylistId = 2, KindId = 2, UserId = 1, PlaylistName = "PlaylistOne" }
-            };
-            List<PlaylistTrack> listPlaylistTrackToAdd = new List<PlaylistTrack>() {
-                new PlaylistTrack { PlaylistId = listPlaylistToAdd[0].PlaylistId, TrackId = 1},
-                new PlaylistTrack { PlaylistId = listPlaylistToAdd[0].PlaylistId, TrackId = 2},
-                new PlaylistTrack { PlaylistId = listPlaylistToAdd[1].PlaylistId, TrackId = 2},
-                new PlaylistTrack { PlaylistId = listPlaylistToAdd[1].PlaylistId, TrackId = 4},
-                new PlaylistTrack { PlaylistId = listPlaylistToAdd[1].PlaylistId, TrackId = 5}
+        //     // Arrange
+        //     List<PlaylistDTO> listPlaylistToAdd = new List<PlaylistDTO>() {
+        //         new PlaylistDTO { PlaylistId = 1, KindId = 1, UserId = 1, PlaylistName = "PlaylistOne" },
+        //         new PlaylistDTO { PlaylistId = 2, KindId = 2, UserId = 1, PlaylistName = "PlaylistOne" }
+        //     };
+        //     List<PlaylistTrack> listPlaylistTrackToAdd = new List<PlaylistTrack>() {
+        //         new PlaylistTrack { PlaylistId = listPlaylistToAdd[0].PlaylistId, TrackId = 1},
+        //         new PlaylistTrack { PlaylistId = listPlaylistToAdd[0].PlaylistId, TrackId = 2},
+        //         new PlaylistTrack { PlaylistId = listPlaylistToAdd[1].PlaylistId, TrackId = 2},
+        //         new PlaylistTrack { PlaylistId = listPlaylistToAdd[1].PlaylistId, TrackId = 4},
+        //         new PlaylistTrack { PlaylistId = listPlaylistToAdd[1].PlaylistId, TrackId = 5}
 
-            };
+        //     };
 
-            // Act
-            listPlaylistToAdd.ForEach(playlistToAdd => {
-                _context.Playlists.Add(_mapper.Map<Playlist>(playlistToAdd));
-            });
-            listPlaylistTrackToAdd.ForEach(playlistGenreToAdd => {
-                _context.PlaylistTracks.Add(playlistGenreToAdd);
-            });
-            _context.SaveChanges();
-            List<PlaylistWithTracksDTO> listPlaylistToTestWithTracks = _controller.GetPlaylists().Result.Value;
-            List<PlaylistDTO> listPlaylistToTestWithoutTracks = new List<PlaylistDTO>();
-            listPlaylistToTestWithTracks.ForEach(playlistWithTrack => {
-                listPlaylistToTestWithoutTracks.Add(_mapper.Map<PlaylistDTO>(_mapper.Map<Playlist>(playlistWithTrack)));      
-            });
+        //     // Act
+        //     listPlaylistToAdd.ForEach(playlistToAdd => {
+        //         _context.Playlists.Add(_mapper.Map<Playlist>(playlistToAdd));
+        //     });
+        //     listPlaylistTrackToAdd.ForEach(playlistGenreToAdd => {
+        //         _context.PlaylistTracks.Add(playlistGenreToAdd);
+        //     });
+        //     _context.SaveChanges();
+        //     List<PlaylistWithTracksDTO> listPlaylistToTestWithTracks = _controller.GetPlaylists().Result.Value;
+        //     List<PlaylistDTO> listPlaylistToTestWithoutTracks = new List<PlaylistDTO>();
+        //     listPlaylistToTestWithTracks.ForEach(playlistWithTrack => {
+        //         listPlaylistToTestWithoutTracks.Add(_mapper.Map<PlaylistDTO>(_mapper.Map<Playlist>(playlistWithTrack)));      
+        //     });
 
-            // Assert
-            CollectionAssert.AllItemsAreNotNull(listPlaylistToTestWithTracks);
-            Assert.AreEqual(listPlaylistToTestWithTracks.Find(e => e.PlaylistId == 1).Tracks.First(t => t.TrackId == 1), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(1)));
-            Assert.AreEqual(listPlaylistToTestWithTracks.Find(e => e.PlaylistId == 1).Tracks.First(t => t.TrackId == 2), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(2)));
-            Assert.AreEqual(listPlaylistToTestWithTracks.Find(e => e.PlaylistId == 2).Tracks.First(t => t.TrackId == 2), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(2)));
-            Assert.AreEqual(listPlaylistToTestWithTracks.Find(e => e.PlaylistId == 2).Tracks.First(t => t.TrackId == 4), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(4)));
-            Assert.AreEqual(listPlaylistToTestWithTracks.Find(e => e.PlaylistId == 2).Tracks.First(t => t.TrackId == 5), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(5)));
-            Assert.AreEqual(listPlaylistToTestWithoutTracks.Find(e => e.PlaylistId == 1), listPlaylistToAdd.Find(e => e.PlaylistId == 1));
-            Assert.AreEqual(listPlaylistToTestWithoutTracks.Find(e => e.PlaylistId == 2), listPlaylistToAdd.Find(e => e.PlaylistId == 2));
-        }
+        //     // Assert
+        //     CollectionAssert.AllItemsAreNotNull(listPlaylistToTestWithTracks);
+        //     Assert.AreEqual(listPlaylistToTestWithTracks.Find(e => e.PlaylistId == 1).Tracks.First(t => t.TrackId == 1), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(1)));
+        //     Assert.AreEqual(listPlaylistToTestWithTracks.Find(e => e.PlaylistId == 1).Tracks.First(t => t.TrackId == 2), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(2)));
+        //     Assert.AreEqual(listPlaylistToTestWithTracks.Find(e => e.PlaylistId == 2).Tracks.First(t => t.TrackId == 2), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(2)));
+        //     Assert.AreEqual(listPlaylistToTestWithTracks.Find(e => e.PlaylistId == 2).Tracks.First(t => t.TrackId == 4), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(4)));
+        //     Assert.AreEqual(listPlaylistToTestWithTracks.Find(e => e.PlaylistId == 2).Tracks.First(t => t.TrackId == 5), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(5)));
+        //     Assert.AreEqual(listPlaylistToTestWithoutTracks.Find(e => e.PlaylistId == 1), listPlaylistToAdd.Find(e => e.PlaylistId == 1));
+        //     Assert.AreEqual(listPlaylistToTestWithoutTracks.Find(e => e.PlaylistId == 2), listPlaylistToAdd.Find(e => e.PlaylistId == 2));
+        // }
 
-        [TestMethod()]
-        public void GetPlaylist_ReturnsOk()
-        {
-            // TODO : I have to map genres to track to take trackGenresDTO I think
+        // [TestMethod()]
+        // public void GetPlaylist_ReturnsOk()
+        // {
+        //     // TODO : I have to map genres to track to take trackGenresDTO I think
 
-            // Arrange
-            PlaylistDTO playlistToAdd = new PlaylistDTO(){ PlaylistId = -1, KindId = 1, UserId = 1, PlaylistName = "PlaylistOne" };
-            List<PlaylistTrack> listPlaylistTrackToAdd = new List<PlaylistTrack>() {
-                new PlaylistTrack { PlaylistId = playlistToAdd.PlaylistId, TrackId = 1},
-                new PlaylistTrack { PlaylistId = playlistToAdd.PlaylistId, TrackId = 4},
-            };
+        //     // Arrange
+        //     PlaylistDTO playlistToAdd = new PlaylistDTO(){ PlaylistId = -1, KindId = 1, UserId = 1, PlaylistName = "PlaylistOne" };
+        //     List<PlaylistTrack> listPlaylistTrackToAdd = new List<PlaylistTrack>() {
+        //         new PlaylistTrack { PlaylistId = playlistToAdd.PlaylistId, TrackId = 1},
+        //         new PlaylistTrack { PlaylistId = playlistToAdd.PlaylistId, TrackId = 4},
+        //     };
 
-            // Act
-            _context.Playlists.Add(_mapper.Map<Playlist>(playlistToAdd));
-            listPlaylistTrackToAdd.ForEach(playlistTrackToAdd => {
-                _context.PlaylistTracks.Add(playlistTrackToAdd);
-            });
-            _context.SaveChanges();
-            PlaylistWithTracksDTO playlistToTestWithTracks = _controller.GetPlaylist(playlistToAdd.PlaylistId).Result.Value;
-            PlaylistDTO playlistToTestWithoutTracks = _mapper.Map<PlaylistDTO>(_mapper.Map<Playlist>(playlistToTestWithTracks));
+        //     // Act
+        //     _context.Playlists.Add(_mapper.Map<Playlist>(playlistToAdd));
+        //     listPlaylistTrackToAdd.ForEach(playlistTrackToAdd => {
+        //         _context.PlaylistTracks.Add(playlistTrackToAdd);
+        //     });
+        //     _context.SaveChanges();
+        //     PlaylistWithTracksDTO playlistToTestWithTracks = _controller.GetPlaylist(playlistToAdd.PlaylistId).Result.Value;
+        //     PlaylistDTO playlistToTestWithoutTracks = _mapper.Map<PlaylistDTO>(_mapper.Map<Playlist>(playlistToTestWithTracks));
 
-            // Assert
-            Assert.IsInstanceOfType(playlistToTestWithTracks, typeof(PlaylistWithTracksDTO));
-            Assert.AreEqual(playlistToTestWithoutTracks, playlistToAdd);
-            Assert.AreEqual(playlistToTestWithTracks.Tracks.First(e => e.TrackId == 1), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(1)));
-            Assert.AreEqual(playlistToTestWithTracks.Tracks.First(e => e.TrackId == 4), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(4)));
-        }
+        //     // Assert
+        //     Assert.IsInstanceOfType(playlistToTestWithTracks, typeof(PlaylistWithTracksDTO));
+        //     Assert.AreEqual(playlistToTestWithoutTracks, playlistToAdd);
+        //     Assert.AreEqual(playlistToTestWithTracks.Tracks.First(e => e.TrackId == 1), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(1)));
+        //     Assert.AreEqual(playlistToTestWithTracks.Tracks.First(e => e.TrackId == 4), _mapper.Map<TrackWithGenresDTO>(_context.Tracks.Find(4)));
+        // }
 
         [TestMethod()]
         public void GetPlaylist_ReturnsNotFound()

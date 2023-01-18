@@ -44,13 +44,13 @@ namespace MusicServiceTest.Controller
         [TestInitialize]
         public void Setup(){
             _controller = new TrackController(_service);
-            _context.Database.EnsureDeleted();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
             _controller = null;
+            _context.Database.EnsureDeleted();
         }
 
         [TestMethod()]
