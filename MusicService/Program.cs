@@ -16,9 +16,9 @@ builder.Services.AddMassTransit(x => {
     x.AddConsumers(entryAssembly);
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host(builder.Configuration["RabbitMQ:host"], "/", h => { 
-            h.Username("root");
-            h.Password("root");
+        cfg.Host(builder.Configuration["RabbitMQ:Host"], "/", h => { 
+            h.Username(builder.Configuration["RabbitMQ:Username"]);
+            h.Password(builder.Configuration["RabbitMQ:Password"]);
         });
         
         cfg.ConfigureEndpoints(context);
