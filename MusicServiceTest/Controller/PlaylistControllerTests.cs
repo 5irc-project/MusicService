@@ -40,7 +40,7 @@ namespace MusicServiceTest.Controller
                     new Kind { KindId = 3, Name = "KindDeux"}
                 );
                 for (int i = 1; i<6; i++){
-                    _context.Tracks.Add(new Track(){ TrackId = i,  Acousticness = (float)0.1, ArtistName = "ArtistName" + i, Danceability = (float)0.1, DurationMs = (float)100, Energy = (float)0.1, Instrumentalness = (float)0.1, Key = "A", Liveness = (float)0.1, Loudness = (float)0.1, Popularity = (float)10, Speechiness =(float)0.1, Tempo = (float)0.1, TrackName = "TrackName" + i, Valence = (float)0.1});
+                    _context.Tracks.Add(new Track(){ TrackId = i,  Acousticness = (double)0.1, ArtistName = "ArtistName" + i, Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackName" + i, Valence = (double)0.1});
                 }
                 _context.TrackGenres.AddRange(
                     new TrackGenre() { TrackId = 1, GenreId = 1 },

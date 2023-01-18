@@ -59,6 +59,10 @@ namespace MusicServiceInit
                     var line = reader.ReadLine();
                     if (line != null)
                     {
+
+                        if (j == 18403){
+                            Console.WriteLine("ah");
+                        }
                         var values = Regex.Split(line, ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
                         
 
@@ -76,18 +80,18 @@ namespace MusicServiceInit
                                 TrackId = j,
                                 ArtistName = values[1],
                                 TrackName = values[2],
-                                Popularity = float.Parse(values[3].Replace(".", ",")),
-                                Acousticness = float.Parse(values[4].Replace(".", ",")),
-                                Danceability = float.Parse(values[5].Replace(".", ",")),
-                                DurationMs = float.Parse(values[6].Replace(".", ",")),
-                                Energy = float.Parse(values[7].Replace(".", ",")),
-                                Instrumentalness = float.Parse(values[8].Replace(".", ",")),
+                                Popularity = double.Parse(values[3].Replace(".", ",")),
+                                Acousticness = double.Parse(values[4].Replace(".", ",")),
+                                Danceability = double.Parse(values[5].Replace(".", ",")),
+                                DurationMs = double.Parse(values[6].Replace(".", ",")),
+                                Energy = double.Parse(values[7].Replace(".", ",")),
+                                Instrumentalness = double.Parse(values[8].Replace(".", ",")),
                                 Key = values[9],
-                                Liveness = float.Parse(values[10].Replace(".", ",")),
-                                Loudness = float.Parse(values[11].Replace(".", ",")),
-                                Speechiness = float.Parse(values[13].Replace(".", ",")),
-                                Tempo = float.Parse(values[14].Replace(".", ",")),
-                                Valence = float.Parse(values[16].Replace(".", ",")),
+                                Liveness = double.Parse(values[10].Replace(".", ",")),
+                                Loudness = double.Parse(values[11].Replace(".", ",")),
+                                Speechiness = double.Parse(values[13].Replace(".", ",")),
+                                Tempo = double.Parse(values[14].Replace(".", ",")),
+                                Valence = double.Parse(values[16].Replace(".", ",")),
                             };
 
                             if (!listGenre.Any(g => g.Name == values[17])){
