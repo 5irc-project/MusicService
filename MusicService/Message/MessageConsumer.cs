@@ -1,61 +1,21 @@
-using System.Text;
-using Newtonsoft.Json;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-
+using MassTransit;
+using MusicService.Services.Implementations;
+using MusicService.Services.Interfaces;
 
 namespace MusicService.Message
 {
-    public class MessageConsumer<T, R>
+    public class MessageConsumer : IConsumer<MessageQueue>
     {
-        private readonly IConfiguration _config;
-        private readonly object _context;
-        public MessageConsumer (object context, IConfiguration config){
-            _context = context;
-            _config = config;
+        private readonly IPlaylistService _service;
 
-            var connection = this.CreateConnection();
-
-            if (connection != null){
-                using (var channel = connection.CreateModel()){
-                    var consumer = new EventingBasicConsumer(channel);
-                    consumer.Received += (sender, args) => { 
-                        ParseMessageAndInvokeMethod(channel, args); 
-                    };
-                    channel.BasicConsume(
-                        queue: _config.GetValue<string>("Queue:Name"),
-                        autoAck: true,
-                        consumer: consumer
-                    );
-                }
-            }else{
-                // TODO : Notification ?
-            }
+        public MessageConsumer(IPlaylistService service){
+            _service = service;
         }
-
-        private IConnection CreateConnection(){
-            try{
-                return new ConnectionFactory { 
-                    HostName = _config.GetValue<string>("Queue:HostName"), 
-                    UserName = _config.GetValue<string>("Queue:UserName"),  
-                    Password = _config.GetValue<string>("Queue:Password"),  
-                    AutomaticRecoveryEnabled = true 
-                }.CreateConnection();
-            }catch{
-                return null;
-            }
-        }
-
-        private void ParseMessageAndInvokeMethod(IModel channel, BasicDeliverEventArgs args){
-            var queueMessage = JsonConvert.DeserializeObject<QueueMessage<R>>(Encoding.UTF8.GetString(args.Body.ToArray()));
-
-            if (queueMessage != null){
-                var method = typeof(T).GetMethod(queueMessage.Callback);
-                if (method != null && queueMessage.Obj != null){
-                    method.Invoke(_context, new object[] { queueMessage.Obj });
-                }
-            }
-            // TODO : Notification if problem ?
+        
+        public async Task Consume(ConsumeContext<MessageQueue> context){
+            MessageQueue msg = context.Message;
+            Console.WriteLine(msg);
+            await _service.GeneratePlaylist(msg.ListTrack);
         }
     }
 }

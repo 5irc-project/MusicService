@@ -1,9 +1,10 @@
+using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MusicService.DTOs;
 using MusicService.Exceptions;
 using MusicService.Message;
-using MusicService.Message.Interfaces;
-using MusicService.Services;
+using MusicService.Services.Implementations;
 using MusicService.Services.Interfaces;
 
 namespace MusicService.Controllers
@@ -13,12 +14,12 @@ namespace MusicService.Controllers
     public class PlaylistController : ControllerBase
     {
         private readonly IPlaylistService _service;
-        private readonly IMessageProducer _messageProducer;
+        private readonly IPublishEndpoint _publishEndPoint;
 
-        public PlaylistController(IPlaylistService service, IMessageProducer messageProducer)
+        public PlaylistController(IPlaylistService service, IPublishEndpoint publishEndpoint)
         {
             _service = service;
-            _messageProducer = messageProducer;
+            _publishEndPoint = publishEndpoint;
         }
 
         // GET: api/Playlist
@@ -41,9 +42,9 @@ namespace MusicService.Controllers
 
         // GET: api/Playlist/User/5
         [HttpGet("User/{userId}")]
-        public async Task<ActionResult<List<PlaylistWithTracksDTO>>> GetPlaylistsByUser(int userId)
+        public async Task<ActionResult<List<PlaylistWithTracksDTO>>> GetPlaylistsByUserId(int userId)
         {
-            return await _service.GetPlaylistsByUser(userId);
+            return await _service.GetPlaylistsByUserId(userId);
         }
 
         // PUT: api/Playlist/5
@@ -74,6 +75,8 @@ namespace MusicService.Controllers
                 return CreatedAtAction("GetPlaylist", new { id = playlist.PlaylistId }, playlist);
             }catch(AlreadyExistsException e){
                 return BadRequest(e.Content);
+            }catch(BadRequestException e){
+                return BadRequest(e.Content);
             }
         }
 
@@ -103,6 +106,36 @@ namespace MusicService.Controllers
             return NoContent();
         }
 
+        [HttpPost("PlaylistTrack/Add/Favorite")]
+        [Authorize]
+        public async Task<IActionResult> AddTrackToFavoritePlaylist(TrackDTO trackDTO)
+        {
+            // Check user exists ?
+            try{
+                var userId = GetUserIdFromClaims();
+                await _service.AddTrackToFavoritePlaylist(userId, trackDTO);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
+
+            return NoContent();
+        }
+
+        [HttpPost("PlaylistTrack/Remove/Favorite")]
+        [Authorize]
+        public async Task<IActionResult> RemoveTrackFromFavoritePlaylist(TrackDTO trackDTO)
+        {
+            // Check user exists ?
+            try{
+                var userId = GetUserIdFromClaims();
+                await _service.RemoveTrackFromFavoritePlaylist(userId, trackDTO);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
+
+            return NoContent();
+        }
+
         // PUT: api/Playlist/PlaylistTrack/Remove/5
         [HttpPost("PlaylistTrack/Remove/{id}")]
         public async Task<IActionResult> RemoveTracksFromPlaylist(int id, List<TrackDTO> lTD)
@@ -120,9 +153,23 @@ namespace MusicService.Controllers
         [HttpPost("Recommendation")]
         public IActionResult GeneratePlaylist(List<TrackDTO> listTrack)
         {
-            _messageProducer.ProduceMessage(new QueueMessage<List<TrackDTO>>(listTrack, nameof(GeneratePlaylist)));
+            _publishEndPoint.Publish<MessageQueue>(new MessageQueue(listTrack));
             return Accepted();
-        }  
+        }
+
+        // POST: api/Recommendation
+        [Authorize]
+        [HttpPost("Recommendation/Dev")]
+        public async Task<IActionResult> GeneratePlaylistDev(List<TrackDTO> listTrack) // TO REMOVE
+        {
+            try{
+                var userId = GetUserIdFromClaims();
+                PlaylistDTO pCreated = await _service.GeneratePlaylistDev(listTrack, userId);
+                return CreatedAtAction("GetPlaylist", new { id = pCreated.PlaylistId }, pCreated);
+            }catch(BadRequestException e){
+                return BadRequest(e.Content);
+            }
+        }
 
         // POST: api/Playlist/private/{userId}
         [HttpPost("private/{userId}")]
@@ -143,5 +190,23 @@ namespace MusicService.Controllers
             await _service.DeletePlaylists(userId);
             return NoContent();
         }  
+
+        // Get: api/Track/Playlists     
+        [Authorize]
+        [HttpGet("Trackless/{trackId}")]
+        public async Task<ActionResult<List<PlaylistDTO>>> GetPlaylistsWithoutTrackForUser(int trackId)
+        {
+            try{
+                var userId = GetUserIdFromClaims();
+                return await _service.GetPlaylistsWithoutTrackForUser(trackId, userId);
+            }catch(NotFoundException e){
+                return NotFound(e.Content);
+            }
+        }
+
+        private int GetUserIdFromClaims() {
+            var id = User.Claims.First(c => c.Type == "UserId").Value;
+            return int.Parse(id);
+        }   
     }
 }

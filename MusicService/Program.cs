@@ -4,13 +4,27 @@ using MusicService.Helpers;
 using MusicService.Services.Interfaces;
 using MusicService.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using MusicService.Message.Interfaces;
-using MusicService.Message.Implementations;
+using MassTransit;
+using System.Reflection;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+// Setup RabbitMQ
+builder.Services.AddMassTransit(x => {
+    var entryAssembly = Assembly.GetExecutingAssembly();
+    x.AddConsumers(entryAssembly);
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h => { 
+            h.Username("root");
+            h.Password("root");
+        });
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddDbContext<MusicServiceDBContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("MusicServiceDBContext")));
@@ -19,7 +33,6 @@ builder.Services.AddScoped<IGenreService, GenreService>();
 builder.Services.AddScoped<IKindService, KindService>();
 builder.Services.AddScoped<ITrackService, TrackService>();
 builder.Services.AddScoped<IPlaylistService, PlaylistService>();
-builder.Services.AddScoped<IMessageProducer, MessageProducer>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);

@@ -39,6 +39,7 @@ namespace MusicServiceTest.Service
         public void Cleanup()
         {
             _controller = null;
+            _context.Database.EnsureDeleted();
         }
 
         [TestMethod()]

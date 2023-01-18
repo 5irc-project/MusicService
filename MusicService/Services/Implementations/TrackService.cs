@@ -254,5 +254,39 @@ namespace MusicService.Services.Implementations
                 throw new NotFoundException(nameof(Genre));
             }
         }
+
+        public async Task<bool> IsTrackInPlaylist(int id, int playlistId){
+            Playlist p = _context.Playlists
+                    .Where(p => p.PlaylistId == playlistId)
+                    .Include(p => p.PlaylistTracks)
+                    .AsNoTracking()
+                    .FirstOrDefault();
+
+            if (p != null){
+                if (p.PlaylistTracks != null && !p.PlaylistTracks.Any(pt => pt.TrackId == id)){
+                    return false;
+                }
+                return true;
+            }else{
+                throw new NotFoundException(playlistId, nameof(Playlist));
+            }
+        }
+
+        public async Task<bool> IsTrackInFavorite(int id, int userId){
+            Playlist p = _context.Playlists
+                    .Where(p => p.UserId == userId && p.KindId == 3)
+                    .Include(p => p.PlaylistTracks)
+                    .AsNoTracking()
+                    .FirstOrDefault();
+
+            if (p != null){
+                if (p.PlaylistTracks != null && !p.PlaylistTracks.Any(pt => pt.TrackId == id)){
+                    return false;
+                }
+                return true;
+            }else{
+                throw new NotFoundException(userId);
+            }
+        }
     }
 }

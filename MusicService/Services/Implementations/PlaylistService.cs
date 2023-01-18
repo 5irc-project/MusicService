@@ -5,7 +5,6 @@ using MusicService.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MusicService.RestConsumer;
-using MusicService.Message;
 
 namespace MusicService.Services.Implementations
 {
@@ -15,7 +14,6 @@ namespace MusicService.Services.Implementations
         private readonly MusicServiceDBContext _context;
         private readonly IMapper _mapper;
         private readonly ITrackService _trackService;
-        private readonly MessageConsumer<PlaylistService, List<TrackDTO>> _messageConsumer;
 
         public PlaylistService(MusicServiceDBContext context, IMapper mapper, ITrackService trackService, IConfiguration config)
         {
@@ -23,7 +21,6 @@ namespace MusicService.Services.Implementations
             _mapper = mapper;
             _trackService = trackService;
             _config = config;
-            _messageConsumer = new MessageConsumer<PlaylistService, List<TrackDTO>>(this, _config); // TODO : Remove config ?
         }
 
         public async Task DeletePlaylist(int id)
@@ -48,18 +45,16 @@ namespace MusicService.Services.Implementations
                 throw new NotFoundException(id, nameof(Playlist));
             }
             PlaylistWithTracksDTO pwtDTO = _mapper.Map<PlaylistWithTracksDTO>(p);
-            pwtDTO.Tracks = new List<TrackDTO>();
+            pwtDTO.Tracks = new List<TrackWithGenresDTO>();
             #pragma warning disable CS8602
             foreach(PlaylistTrack playlistTrack in p.PlaylistTracks){
-                pwtDTO.Tracks.Add(
-                    _mapper.Map<TrackDTO>(_context.Tracks.Find(playlistTrack.TrackId))
-                );
+                pwtDTO.Tracks.Add(_trackService.GetTrack(playlistTrack.TrackId).Result);
             }
             #pragma warning restore CS8602  
             return pwtDTO;
         }
 
-        public async Task<List<PlaylistWithTracksDTO>> GetPlaylistsByUser(int userId)
+        public async Task<List<PlaylistWithTracksDTO>> GetPlaylistsByUserId(int userId)
         {
             List<Playlist>? listPlaylist = await _context.Playlists
                 .Include(p => p.Kind)
@@ -71,12 +66,10 @@ namespace MusicService.Services.Implementations
 
             listPlaylist.ForEach(p => {
                 PlaylistWithTracksDTO pwtDTO = _mapper.Map<PlaylistWithTracksDTO>(p);
-                pwtDTO.Tracks = new List<TrackDTO>();
+                pwtDTO.Tracks = new List<TrackWithGenresDTO>();
                 #pragma warning disable CS8602
                 foreach(PlaylistTrack playlistTrack in p.PlaylistTracks){
-                    pwtDTO.Tracks.Add(
-                        _mapper.Map<TrackDTO>(_context.Tracks.Find(playlistTrack.TrackId))
-                    );
+                    pwtDTO.Tracks.Add(_trackService.GetTrack(playlistTrack.TrackId).Result);
                 }
                 #pragma warning restore CS8602  
                 listPlaylistWithTrack.Add(pwtDTO);
@@ -93,11 +86,11 @@ namespace MusicService.Services.Implementations
             List<PlaylistWithTracksDTO> lpwtDTO = new List<PlaylistWithTracksDTO>();
             lP.ForEach(p => {
                 PlaylistWithTracksDTO pwtDTO = _mapper.Map<PlaylistWithTracksDTO>(p);
-                pwtDTO.Tracks = new List<TrackDTO>();
+                pwtDTO.Tracks = new List<TrackWithGenresDTO>();
                 #pragma warning disable CS8602
                 foreach(PlaylistTrack playlistTrack in p.PlaylistTracks){
                     pwtDTO.Tracks.Add(
-                        _mapper.Map<TrackDTO>(_context.Tracks.Find(playlistTrack.TrackId))
+                       _trackService.GetTrack(playlistTrack.TrackId).Result
                     );
                 }
                 #pragma warning restore CS8602
@@ -109,6 +102,11 @@ namespace MusicService.Services.Implementations
 
         public async Task<PlaylistDTO> PostPlaylist(PlaylistDTO pDTO)
         {
+            // Check if user exists instead !
+            if (pDTO.UserId == 0){
+                throw new BadRequestException("Please provide a user Id in your request");
+            }
+
             if (_context.Playlists.FirstOrDefault(p => p.PlaylistId == pDTO.PlaylistId) != null){
                 throw new AlreadyExistsException(nameof(Playlist), pDTO.PlaylistId);
             }
@@ -130,13 +128,13 @@ namespace MusicService.Services.Implementations
 
         public async Task AddTracksToPlaylist(int id, List<TrackDTO> lTD)
         {
-            Playlist? p = await _context.Playlists.FindAsync(id);
+            Playlist? p = await _context.Playlists.FirstOrDefaultAsync(p => p.PlaylistId == id);
             
             if (p != null){
                 // If every genre exists and the track isn't null
                 if (lTD.All(tDTO => _context.Tracks.AsNoTracking().FirstOrDefault(t => t.TrackId == tDTO.TrackId) != null) == true && p != null){
-                    lTD.ForEach(async tDTO => {
-                        Track? t = await _context.Tracks.FindAsync(tDTO.TrackId);
+                    foreach(var tDTO in lTD){
+                        Track? t = await _context.Tracks.FirstOrDefaultAsync(t => t.TrackId == tDTO.TrackId);
                         #pragma warning disable CS8601
                         if (_context.PlaylistTracks.FirstOrDefault(pt => pt.PlaylistId == id && pt.TrackId == tDTO.TrackId) == null){
                             _context.PlaylistTracks.Add(new PlaylistTrack {
@@ -147,7 +145,7 @@ namespace MusicService.Services.Implementations
                             });
                         }
                         #pragma warning restore CS8601
-                    });
+                    }
                     await _context.SaveChangesAsync();
                 }else{
                     throw new NotFoundException(nameof(Track));
@@ -214,10 +212,37 @@ namespace MusicService.Services.Implementations
             }
         }
 
+        public async Task<PlaylistDTO> GeneratePlaylistDev(List<TrackDTO> listTrack, int userId) // TO REMOVE
+        {
+            try{
+                var rand = new Random();
+                if (listTrack.Count == 0){
+                    throw new BadRequestException("Please provide at least one tracks");
+                }
+
+                string genrePredicted = "Electronic";
+
+                var g = _context.Genres.FirstOrDefault(g => g.Name == genrePredicted);
+                
+                GenreDTO gDTO = _mapper.Map<GenreDTO>(g);
+                List<TrackWithGenresDTO> listTrackWithGenre = await _trackService.GetTracksByGenre(gDTO.GenreId);
+                List<TrackWithGenresDTO> listTrackWithGenreRandom = listTrackWithGenre.OrderBy(x => rand.Next()).Take(20).ToList();
+                var action = await this.PostPlaylist(new PlaylistDTO() {
+                    KindId = 1,
+                    PlaylistName = "Testing",
+                    UserId = userId
+                });
+                await this.AddTracksToPlaylist(action.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));
+                return action;
+            }catch(Exception e){
+                throw e;
+            }
+        }
+
         public async Task DeletePlaylists(int userId)
         {
             // TODO : Check user exists ?
-            List<PlaylistWithTracksDTO> listPlaylistUser = await this.GetPlaylistsByUser(userId);
+            List<PlaylistWithTracksDTO> listPlaylistUser = await this.GetPlaylistsByUserId(userId);
             if (listPlaylistUser != null && listPlaylistUser.Count != 0){
                 listPlaylistUser.ForEach(p => {
                     _context.Playlists.Remove(_mapper.Map<Playlist>(p));
@@ -229,7 +254,7 @@ namespace MusicService.Services.Implementations
         public async Task<PlaylistDTO> AddFavoritePlaylist(int userId)
         {
             // TODO : Check user exists ?
-            List<PlaylistWithTracksDTO> listPlaylistUser = await this.GetPlaylistsByUser(userId);
+            List<PlaylistWithTracksDTO> listPlaylistUser = await this.GetPlaylistsByUserId(userId);
             if (listPlaylistUser != null && listPlaylistUser.Count != 0){
                 if (listPlaylistUser.Any(p => p.PlaylistName == "Favorite Musics" && p.KindId == 3)){
                     throw new AlreadyExistsException(userId);
@@ -245,6 +270,51 @@ namespace MusicService.Services.Implementations
             _context.Playlists.Add(p);
             await _context.SaveChangesAsync();
             return _mapper.Map<PlaylistDTO>(p);             
+        }
+
+        public async Task<List<PlaylistDTO>> GetPlaylistsWithoutTrackForUser(int trackId, int userId)
+        {
+            // TODO : Chech user exists ?
+            List<PlaylistWithTracksDTO> listP = await this.GetPlaylistsByUserId(userId);
+            List<PlaylistWithTracksDTO> listPlaylistsToRemove = new List<PlaylistWithTracksDTO>();
+
+            listP.ForEach(p => {
+                if (p.Tracks.Any(t => t.TrackId == trackId)){
+                    listPlaylistsToRemove.Add(p);
+                }
+            });
+
+            listPlaylistsToRemove.ForEach(p =>{
+                listP.Remove(p);
+            });
+
+            return _mapper.Map<List<PlaylistDTO>>(_mapper.Map<List<Playlist>>(listP));
+        }
+
+        public async Task AddTrackToFavoritePlaylist(int userId, TrackDTO track)
+        {
+            Playlist? p = await _context.Playlists
+                .Where(p => p.UserId == userId && p.KindId == 3)
+                .FirstOrDefaultAsync();
+
+            if (p != null){
+                await this.AddTracksToPlaylist(p.PlaylistId, new List<TrackDTO>(){ track });
+            }else{
+                throw new NotFoundException(userId);
+            }
+        }
+
+        public async Task RemoveTrackFromFavoritePlaylist(int userId, TrackDTO track)
+        {
+            Playlist? p = await _context.Playlists
+                .Where(p => p.UserId == userId && p.KindId == 3)
+                .FirstOrDefaultAsync();
+
+            if (p != null){
+                await this.RemoveTracksFromPlaylist(p.PlaylistId, new List<TrackDTO>(){ track });
+            }else{
+                throw new NotFoundException(userId);
+            }
         }
     }
 }

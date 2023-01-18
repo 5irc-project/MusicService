@@ -16,6 +16,11 @@ namespace MusicServiceInit
             services.AddDbContext<MusicServiceDBContext>(opt => opt.UseNpgsql("Server=localhost;port=8003;Database=MusicServiceDatabase;uid=root;password=root;"));
             var serviceProvider = services.BuildServiceProvider();
             _context = serviceProvider.GetService<MusicServiceDBContext>();
+            try{
+                _context.Database.Migrate();
+            }catch(Exception e){
+                throw e; 
+            }
 
             if (_context.Genres.ToList().Count == 0 && _context.Tracks.ToList().Count == 0 && _context.Kinds.ToList().Count == 0) {
                 var dataFromCSV = extractDataFromCSV();

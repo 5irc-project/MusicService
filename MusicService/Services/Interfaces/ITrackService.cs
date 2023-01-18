@@ -15,5 +15,7 @@ namespace MusicService.Services.Interfaces
         Task DeleteTrack(int id);
         Task AddGenresToTrack(int id, List<GenreDTO> lGD);
         Task RemoveGenresFromTrack(int id, List<GenreDTO> lGD);
+        Task<bool> IsTrackInPlaylist(int id, int playlistId);
+        Task<bool> IsTrackInFavorite(int id, int userId);
     }
 }
