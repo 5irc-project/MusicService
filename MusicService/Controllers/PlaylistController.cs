@@ -150,10 +150,12 @@ namespace MusicService.Controllers
         }
 
         // POST: api/Recommendation
+        [Authorize]
         [HttpPost("Recommendation")]
         public IActionResult GeneratePlaylist(List<TrackDTO> listTrack)
         {
-            _publishEndPoint.Publish<MessageQueue>(new MessageQueue(listTrack));
+            var userId = GetUserIdFromClaims();
+            _publishEndPoint.Publish<MessageQueue>(new MessageQueue(listTrack, userId));
             return Accepted();
         }
 

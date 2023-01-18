@@ -185,9 +185,8 @@ namespace MusicService.Services.Implementations
             }
         }
 
-        public async Task GeneratePlaylist(List<TrackDTO> listTrack)
+        public async Task<PlaylistDTO> GeneratePlaylist(List<TrackDTO> listTrack, int userId)
         {
-            // TODO : Fix it it's ugly
             try{
                 var rand = new Random();
                 if (listTrack.Count == 0){
@@ -215,7 +214,7 @@ namespace MusicService.Services.Implementations
                 await this.AddTracksToPlaylist(action.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));       
                 var endpoint = await _bus.GetSendEndpoint(new Uri(_config["RabbitMQ:Notification"]));
                 await endpoint.Send<MessageNotificationQueue>(new MessageNotificationQueue(userId, true));
-                return action
+                return action;
             }catch(Exception e){
                 var endpoint = await _bus.GetSendEndpoint(new Uri(_config["RabbitMQ:Notification"]));
                 await endpoint.Send<MessageNotificationQueue>(new MessageNotificationQueue(userId, false));
