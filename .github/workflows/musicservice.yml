@@ -1,10 +1,10 @@
-name: Docker Build Image and Publisg CI
+name: Docker Build MusicService and Publish CI
 
 on:
   push:
-    branches: [ "main", "develop", "feature/cicd" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main", "develop", "feature/cicd" ]
+    branches: [ "main", "develop" ]
 
 env:
   REGISTRY: ghcr.io

@@ -1,10 +1,10 @@
-name: Docker Build Image and Publisg CI
+name: Docker Build MusicServiceInit and Publish CI
 
 on:
   push:
-    branches: [ "main", "develop", "feature/cicd" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main", "develop", "feature/cicd" ]
+    branches: [ "main", "develop" ]
 
 env:
   REGISTRY: ghcr.io
@@ -31,9 +31,9 @@ jobs:
       id: meta
       uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
       with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}init
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}Init
     
-    - name: Build and push Docker image for MusicService
+    - name: Build and push Docker image for MusicServiceInit
       uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
       with:
         context: .
