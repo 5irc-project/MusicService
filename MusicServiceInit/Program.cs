@@ -59,10 +59,6 @@ namespace MusicServiceInit
                     var line = reader.ReadLine();
                     if (line != null)
                     {
-
-                        if (j == 18403){
-                            Console.WriteLine("ah");
-                        }
                         var values = Regex.Split(line, ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
                         
 
