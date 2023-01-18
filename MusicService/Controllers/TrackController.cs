@@ -6,7 +6,7 @@ using MusicService.Services.Interfaces;
 
 namespace MusicService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Music/[controller]")]
     [ApiController]
     public class TrackController : ControllerBase
     {

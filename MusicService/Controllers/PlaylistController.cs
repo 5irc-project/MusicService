@@ -9,7 +9,7 @@ using MusicService.Services.Interfaces;
 
 namespace MusicService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Music/[controller]")]
     [ApiController]
     public class PlaylistController : ControllerBase
     {
@@ -172,7 +172,7 @@ namespace MusicService.Controllers
         }
 
         // POST: api/Playlist/private/{userId}
-        [HttpPost("private/{userId}")]
+        [HttpPost("/api/private/Music/[controller]/{userId}")]
         public async Task<ActionResult<PlaylistDTO>> AddFavoritePlaylist(int userId)
         {
             try{
@@ -184,7 +184,7 @@ namespace MusicService.Controllers
         }  
 
         // POST: api/Playlist/private/5
-        [HttpDelete("private/{userId}")]
+        [HttpDelete("/api/private/Music/[controller]/{userId}")]
         public async Task<IActionResult> DeletePlaylists(int userId)
         {
             await _service.DeletePlaylists(userId);
