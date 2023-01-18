@@ -5,6 +5,8 @@ using MusicService.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MusicService.RestConsumer;
+using MassTransit;
+using MusicService.Message;
 
 namespace MusicService.Services.Implementations
 {
@@ -14,13 +16,15 @@ namespace MusicService.Services.Implementations
         private readonly MusicServiceDBContext _context;
         private readonly IMapper _mapper;
         private readonly ITrackService _trackService;
+        private IBus _bus;
 
-        public PlaylistService(MusicServiceDBContext context, IMapper mapper, ITrackService trackService, IConfiguration config)
+        public PlaylistService(MusicServiceDBContext context, IMapper mapper, ITrackService trackService, IConfiguration config, IBus bus)
         {
             _context = context;
             _mapper = mapper;
             _trackService = trackService;
             _config = config;
+            _bus = bus;
         }
 
         public async Task DeletePlaylist(int id)
@@ -233,6 +237,8 @@ namespace MusicService.Services.Implementations
                     UserId = userId
                 });
                 await this.AddTracksToPlaylist(action.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));
+                var endpoint = await _bus.GetSendEndpoint(new Uri("queue:NotificationQueue"));
+                await endpoint.Send<MessageNotificationQueue>(new MessageNotificationQueue(userId, true));
                 return action;
             }catch(Exception e){
                 throw e;
