@@ -15,14 +15,13 @@ builder.Services.AddMassTransit(x => {
     x.AddConsumers(entryAssembly);
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("localhost", "/", h => { 
+        cfg.Host(builder.Configuration["Queue:RabbitMQHost"], "/", h => { 
             h.Username("root");
             h.Password("root");
         });
         cfg.ConfigureEndpoints(context);
     });
 });
-
 
 // Add services to the container.
 builder.Services.AddControllers();

@@ -2,18 +2,23 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Configuration;
+using System;
 
 namespace MusicServiceInit
 {
     class Program
     {
+        private static string ENVIRONMENT = GetEnvironment();
         private static string PathToCSV = "./cleaned_music_genre.csv";
         private static MusicServiceDBContext? _context;
         static void Main(string[] args)
         {
             #pragma warning disable CS8602
             var services = new ServiceCollection();
-            services.AddDbContext<MusicServiceDBContext>(opt => opt.UseNpgsql("Server=localhost;port=8003;Database=MusicServiceDatabase;uid=root;password=root;"));
+            var configurationRoot = ConfigureJsonEnv();
+            Console.WriteLine(configurationRoot.GetConnectionString("MusicServiceDBContext"));
+            services.AddDbContext<MusicServiceDBContext>(opt => opt.UseNpgsql(configurationRoot.GetConnectionString("MusicServiceDBContext")));
             var serviceProvider = services.BuildServiceProvider();
             _context = serviceProvider.GetService<MusicServiceDBContext>();
             try{
@@ -113,6 +118,33 @@ namespace MusicServiceInit
                 }
             }
             return (listGenre, listTrack, listTrackGenre);
+        }
+
+        private static string GetEnvironment()
+        {
+
+            try
+            {
+                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                Console.WriteLine("From method : " + environment);
+                return environment == null ? "Production" : environment;
+            }
+            catch (Exception)
+            {
+                return "Production";
+            }
+        }
+
+        private static IConfigurationRoot ConfigureJsonEnv()
+        {
+            Console.WriteLine("From class : " + ENVIRONMENT);
+            var builder = new ConfigurationBuilder()
+            .AddJsonFile($"appsettings.json", true, true)
+            .AddJsonFile($"appsettings.{ENVIRONMENT}.json", true, true)
+            .AddEnvironmentVariables();
+            var configurationRoot = builder.Build();
+
+            return configurationRoot;
         }
     }
 }

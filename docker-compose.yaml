@@ -3,7 +3,7 @@ version: "3"
 services:
   musicdb:
     image: postgres:latest
-    container_name: carddb
+    container_name: musicdb
     restart: unless-stopped
     environment:
       POSTGRES_DB: MusicServiceDatabase
@@ -33,9 +33,36 @@ services:
     networks:
       - shared-network
 
+  musicserviceinit:
+    build:
+      context: .
+      dockerfile: ./MusicServiceInit/Dockerfile
+    container_name: musicserviceinit
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    depends_on:
+      - musicdb
+    networks:
+      - shared-network
+
+  musicservice:
+    build:
+      context: .
+      dockerfile: ./MusicService/Dockerfile
+    container_name: musicservice
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "8000:80"
+    depends_on:
+      - musicdb
+    #   - musicserviceinit
+    networks:
+      - shared-network
 
   rabbitmq:
     image: 'bitnami/rabbitmq:latest'
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "8080:15672"
