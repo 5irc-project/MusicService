@@ -13,8 +13,7 @@ namespace MusicService.Message
         
         public async Task Consume(ConsumeContext<MessageQueue> context){
             MessageQueue msg = context.Message;
-            Console.WriteLine(msg);
-            await _service.GeneratePlaylist(msg.ListTrack);
+            await _service.GeneratePlaylist(msg.ListTrack, msg.UserId);
         }
     }
 }
