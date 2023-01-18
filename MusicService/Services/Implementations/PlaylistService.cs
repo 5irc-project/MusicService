@@ -212,9 +212,14 @@ namespace MusicService.Services.Implementations
                     PlaylistName = "Testing",
                     UserId = 0
                 });
-                await this.AddTracksToPlaylist(action.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));
+                await this.AddTracksToPlaylist(action.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));       
+                var endpoint = await _bus.GetSendEndpoint(new Uri(_config["RabbitMQ:Notification"]));
+                await endpoint.Send<MessageNotificationQueue>(new MessageNotificationQueue(userId, true));
+                return action
             }catch(Exception e){
-                throw e;
+                var endpoint = await _bus.GetSendEndpoint(new Uri(_config["RabbitMQ:Notification"]));
+                await endpoint.Send<MessageNotificationQueue>(new MessageNotificationQueue(userId, false));
+                throw e;      
             }
         }
 
