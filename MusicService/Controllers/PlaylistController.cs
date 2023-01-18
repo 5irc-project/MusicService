@@ -158,13 +158,13 @@ namespace MusicService.Controllers
         }
 
         // POST: api/Recommendation
-        [Authorize]
+        // [Authorize]
         [HttpPost("Recommendation/Dev")]
         public async Task<IActionResult> GeneratePlaylistDev(List<TrackDTO> listTrack) // TO REMOVE
         {
             try{
-                var userId = GetUserIdFromClaims();
-                PlaylistDTO pCreated = await _service.GeneratePlaylistDev(listTrack, userId);
+                // var userId = GetUserIdFromClaims();
+                PlaylistDTO pCreated = await _service.GeneratePlaylistDev(listTrack, 10);
                 return CreatedAtAction("GetPlaylist", new { id = pCreated.PlaylistId }, pCreated);
             }catch(BadRequestException e){
                 return BadRequest(e.Content);

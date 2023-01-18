@@ -6,6 +6,7 @@ using MusicService.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MassTransit;
 using System.Reflection;
+using MusicService.Message;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddMassTransit(x => {
             h.Username("root");
             h.Password("root");
         });
+        
         cfg.ConfigureEndpoints(context);
     });
 });

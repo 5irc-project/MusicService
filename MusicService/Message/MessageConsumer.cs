@@ -1,5 +1,4 @@
 using MassTransit;
-using MusicService.Services.Implementations;
 using MusicService.Services.Interfaces;
 
 namespace MusicService.Message
