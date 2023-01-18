@@ -13,6 +13,6 @@ TODO :
 Comment test le truc ac Authorize ?
 Custom rabbit mq queue name and config
 ?
-Search by artist name & artist & album
+Search by artist name & artist
 
 setup queueName & host rest

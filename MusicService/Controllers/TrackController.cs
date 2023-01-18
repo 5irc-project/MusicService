@@ -50,6 +50,13 @@ namespace MusicService.Controllers
         }
 
         // GET: api/Track/NameQuery/"ex"
+        [HttpGet("Query/{query}")]
+        public async Task<ActionResult<List<TrackWithGenresDTO>>> GetTracksByQuery(string query)
+        {
+            return await _service.GetTracksByQuery(query);
+        }
+
+        // GET: api/Track/NameQuery/"ex"
         [HttpGet("Genre/{genreId}")]
         public async Task<ActionResult<List<TrackWithGenresDTO>>> GetTracskByGenre(int genreId)
         {
