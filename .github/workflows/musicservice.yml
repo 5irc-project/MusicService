@@ -39,5 +39,5 @@ jobs:
         context: .
         file: ./MusicService/Dockerfile
         push: true
-        tags: musicservice/${{ steps.meta.outputs.tags }}
+        tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
