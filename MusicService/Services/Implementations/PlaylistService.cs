@@ -209,7 +209,7 @@ namespace MusicService.Services.Implementations
                 var action = await this.PostPlaylist(new PlaylistDTO() {
                     KindId = 1,
                     PlaylistName = "Testing",
-                    UserId = 0
+                    UserId = userId
                 });
                 await this.AddTracksToPlaylist(action.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));       
                 var endpoint = await _bus.GetSendEndpoint(new Uri(_config["RabbitMQ:Notification"]));
