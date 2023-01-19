@@ -7,8 +7,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MassTransit;
 using System.Reflection;
 using MusicService.HttpClient;
+using System.Globalization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+var ci = new CultureInfo("fr-FR");
+ci.NumberFormat.NumberDecimalSeparator = ".";
+ci.NumberFormat.CurrencyDecimalSeparator = ".";
 
 // Setup RabbitMQ
 builder.Services.AddMassTransit(x => {
