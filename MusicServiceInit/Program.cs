@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using System.Globalization;
+using Microsoft.AspNetCore.Components;
 
 namespace MusicServiceInit
 {
@@ -14,9 +15,18 @@ namespace MusicServiceInit
         private static MusicServiceDBContext? _context;
         static void Main(string[] args)
         {
-            var ci = new CultureInfo("en-EN");
-            ci.NumberFormat.NumberDecimalSeparator = ".";
-            ci.NumberFormat.CurrencyDecimalSeparator = ".";
+            var cultureInfo = CultureInfo.GetCultureInfo("en-GB");
+
+            var numberFormat = new NumberFormatInfo();
+            numberFormat.PercentDecimalSeparator = ",";
+            numberFormat.PercentGroupSeparator = ".";
+            numberFormat.CurrencyDecimalSeparator = ",";
+            numberFormat.CurrencyGroupSeparator = ".";
+            numberFormat.NumberDecimalSeparator = ",";
+            numberFormat.NumberGroupSeparator = ".";
+
+            cultureInfo.NumberFormat = numberFormat;
+
             #pragma warning disable CS8602
             var services = new ServiceCollection();
             var configurationRoot = ConfigureJsonEnv();
