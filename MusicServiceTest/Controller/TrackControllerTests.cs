@@ -58,8 +58,8 @@ namespace MusicServiceTest.Controller
         {
             // Arrange
             List<TrackDTO> listTrackToAdd = new List<TrackDTO>() {
-                new TrackDTO { TrackId = 1,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1},
-                new TrackDTO { TrackId = 2,  Acousticness = (double)0.2, ArtistName = "ArtistNameTwo", Danceability = (double)0.2, DurationMs = (double)200, Energy = (double)0.2, Instrumentalness = (double)0.2, Key = "A", Liveness = (double)0.2, Loudness = (double)0.2, Popularity = (double)20, Speechiness =(double)0.2, Tempo = (double)0.2, TrackName = "TrackNameTwo", Valence = (double)0.2},
+                new TrackDTO { TrackId = 1,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1},
+                new TrackDTO { TrackId = 2,  Acousticness = (decimal)0.2, ArtistName = "ArtistNameTwo", Danceability = (decimal)0.2, DurationMs = (decimal)200, Energy = (decimal)0.2, Instrumentalness = (decimal)0.2, Key = "A", Liveness = (decimal)0.2, Loudness = (decimal)0.2, Popularity = (decimal)20, Speechiness =(decimal)0.2, Tempo = (decimal)0.2, TrackName = "TrackNameTwo", Valence = (decimal)0.2},
             };
             List<TrackGenre> listTrackGenreToAdd = new List<TrackGenre>() {
                 new TrackGenre { TrackId = listTrackToAdd[0].TrackId, GenreId = 1},
@@ -95,8 +95,8 @@ namespace MusicServiceTest.Controller
         {
             // Arrange
             List<TrackDTO> listTrackToAdd = new List<TrackDTO>() {
-                new TrackDTO { TrackId = -200,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1},
-                new TrackDTO { TrackId = -201,  Acousticness = (double)0.2, ArtistName = "ArtistNameTwo", Danceability = (double)0.2, DurationMs = (double)200, Energy = (double)0.2, Instrumentalness = (double)0.2, Key = "A", Liveness = (double)0.2, Loudness = (double)0.2, Popularity = (double)20, Speechiness =(double)0.2, Tempo = (double)0.2, TrackName = "TrackNameTwo", Valence = (double)0.2},
+                new TrackDTO { TrackId = -200,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1},
+                new TrackDTO { TrackId = -201,  Acousticness = (decimal)0.2, ArtistName = "ArtistNameTwo", Danceability = (decimal)0.2, DurationMs = (decimal)200, Energy = (decimal)0.2, Instrumentalness = (decimal)0.2, Key = "A", Liveness = (decimal)0.2, Loudness = (decimal)0.2, Popularity = (decimal)20, Speechiness =(decimal)0.2, Tempo = (decimal)0.2, TrackName = "TrackNameTwo", Valence = (decimal)0.2},
             };
 
             // Act
@@ -114,7 +114,7 @@ namespace MusicServiceTest.Controller
         public void GetTrack_ReturnsOk()
         {
             // Arrange
-            TrackDTO trackToAdd = new TrackDTO { TrackId = -1,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1};
+            TrackDTO trackToAdd = new TrackDTO { TrackId = -1,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1};
             List<TrackGenre> listTrackGenreToAdd = new List<TrackGenre>() {
                 new TrackGenre { TrackId = trackToAdd.TrackId, GenreId = 1},
                 new TrackGenre { TrackId = trackToAdd.TrackId, GenreId = 2},
@@ -151,10 +151,10 @@ namespace MusicServiceTest.Controller
         {
             // Arrange
             List<TrackDTO> listTrackToAdd = new List<TrackDTO>() {
-                new TrackDTO { TrackId = -101,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TestingAZE", Valence = (double)0.1},
-                new TrackDTO { TrackId = -102,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TestingAZEb", Valence = (double)0.1},
-                new TrackDTO { TrackId = -103,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TestingAZEc", Valence = (double)0.1},
-                new TrackDTO { TrackId = -104,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "Bonjour", Valence = (double)0.1},
+                new TrackDTO { TrackId = -101,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TestingAZE", Valence = (decimal)0.1},
+                new TrackDTO { TrackId = -102,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TestingAZEb", Valence = (decimal)0.1},
+                new TrackDTO { TrackId = -103,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TestingAZEc", Valence = (decimal)0.1},
+                new TrackDTO { TrackId = -104,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "Bonjour", Valence = (decimal)0.1},
             };
 
             // Act
@@ -173,8 +173,8 @@ namespace MusicServiceTest.Controller
         {
             // Arrange
             List<TrackDTO> listTrackToAdd = new List<TrackDTO>() {
-                new TrackDTO { TrackId = -105,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1},
-                new TrackDTO { TrackId = -106,  Acousticness = (double)0.2, ArtistName = "ArtistNameTwo", Danceability = (double)0.2, DurationMs = (double)200, Energy = (double)0.2, Instrumentalness = (double)0.2, Key = "A", Liveness = (double)0.2, Loudness = (double)0.2, Popularity = (double)20, Speechiness =(double)0.2, Tempo = (double)0.2, TrackName = "TrackNameTwo", Valence = (double)0.2},
+                new TrackDTO { TrackId = -105,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1},
+                new TrackDTO { TrackId = -106,  Acousticness = (decimal)0.2, ArtistName = "ArtistNameTwo", Danceability = (decimal)0.2, DurationMs = (decimal)200, Energy = (decimal)0.2, Instrumentalness = (decimal)0.2, Key = "A", Liveness = (decimal)0.2, Loudness = (decimal)0.2, Popularity = (decimal)20, Speechiness =(decimal)0.2, Tempo = (decimal)0.2, TrackName = "TrackNameTwo", Valence = (decimal)0.2},
             };
             List<TrackGenre> listTrackGenreToAdd = new List<TrackGenre>() {
                 new TrackGenre { TrackId = listTrackToAdd[0].TrackId, GenreId = 100},
@@ -210,8 +210,8 @@ namespace MusicServiceTest.Controller
         // public void PutTrack_ReturnsOk()
         // {
         //     // Arrange
-        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -2,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1};
-        //     TrackDTO trackToPut = new TrackDTO { TrackId = -2,  Acousticness = (double)0.2, ArtistName = "ArtistNameOneAfterPut", Danceability = (double)0.2, DurationMs = (double)100, Energy = (double)0.2, Instrumentalness = (double)0.2, Key = "A", Liveness = (double)0.2, Loudness = (double)0.2, Popularity = (double)20, Speechiness =(double)0.2, Tempo = (double)0.2, TrackName = "TrackNameOneAfterPut", Valence = (double)0.2};
+        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -2,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1};
+        //     TrackDTO trackToPut = new TrackDTO { TrackId = -2,  Acousticness = (decimal)0.2, ArtistName = "ArtistNameOneAfterPut", Danceability = (decimal)0.2, DurationMs = (decimal)100, Energy = (decimal)0.2, Instrumentalness = (decimal)0.2, Key = "A", Liveness = (decimal)0.2, Loudness = (decimal)0.2, Popularity = (decimal)20, Speechiness =(decimal)0.2, Tempo = (decimal)0.2, TrackName = "TrackNameOneAfterPut", Valence = (decimal)0.2};
 
         //     // Act
         //     _context.Tracks.Add(_mapper.Map<Track>(trackToAdd));
@@ -228,7 +228,7 @@ namespace MusicServiceTest.Controller
         // public void PutTrack_ReturnsNotFound()
         // {
         //     // Arrange
-        //     TrackDTO trackToPut = new TrackDTO { TrackId = -1000,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1};
+        //     TrackDTO trackToPut = new TrackDTO { TrackId = -1000,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1};
 
         //     // Act
         //     var actionToTest = (NotFoundObjectResult)_controller.PutTrack(trackToPut.TrackId, trackToPut).Result;
@@ -241,7 +241,7 @@ namespace MusicServiceTest.Controller
         // public void PutTrack_ReturnsBadRequest()
         // {
         //     // Arrange
-        //     TrackDTO trackToPut = new TrackDTO { TrackId = -1000,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1};
+        //     TrackDTO trackToPut = new TrackDTO { TrackId = -1000,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1};
 
         //     // Act
         //     var actionToTest = _controller.PutTrack(-1001, trackToPut).Result;
@@ -254,7 +254,7 @@ namespace MusicServiceTest.Controller
         // public void PostTrack_ReturnsOk()
         // {
         //     // Arrange
-        //     TrackDTO trackToPost = new TrackDTO { TrackId = -3,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1};
+        //     TrackDTO trackToPost = new TrackDTO { TrackId = -3,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1};
 
         //     // Act
         //     var actionToTest = _controller.PostTrack(trackToPost).Result.Result;
@@ -268,8 +268,8 @@ namespace MusicServiceTest.Controller
         // public void PostTrack_ReturnsAlreadyExists_Id()
         // {
         //     // Arrange
-        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -4,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1};
-        //     TrackDTO trackToPost = new TrackDTO { TrackId = -4,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1};
+        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -4,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1};
+        //     TrackDTO trackToPost = new TrackDTO { TrackId = -4,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1};
 
         //     // Act
         //     _context.Tracks.Add(_mapper.Map<Track>(trackToAdd));
@@ -284,7 +284,7 @@ namespace MusicServiceTest.Controller
         // public void PostTrackWithGenres_ReturnsOk()
         // {
         //     // Arrange
-        //     TrackWithGenresDTO trackWithGenresToPost = new TrackWithGenresDTO { TrackId = -5, Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1,Genres = new List<GenreDTO>() { _mapper.Map<GenreDTO>(_context.Genres.Find(1)), _mapper.Map<GenreDTO>(_context.Genres.Find(2)) }};
+        //     TrackWithGenresDTO trackWithGenresToPost = new TrackWithGenresDTO { TrackId = -5, Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1,Genres = new List<GenreDTO>() { _mapper.Map<GenreDTO>(_context.Genres.Find(1)), _mapper.Map<GenreDTO>(_context.Genres.Find(2)) }};
 
         //     // Act
         //     var actionToTest = _controller.PostTrackWithGenres(trackWithGenresToPost).Result.Result;
@@ -304,7 +304,7 @@ namespace MusicServiceTest.Controller
         // public void PostTrackWithGenres_ReturnsNotFound()
         // {
         //     // Arrange
-        //     TrackWithGenresDTO trackWithGenresToPost = new TrackWithGenresDTO { TrackId = -6, Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1,Genres = new List<GenreDTO>() { _mapper.Map<GenreDTO>(_context.Genres.Find(1)), new GenreDTO() { GenreId = 4, Name = "Fake"}}};
+        //     TrackWithGenresDTO trackWithGenresToPost = new TrackWithGenresDTO { TrackId = -6, Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1,Genres = new List<GenreDTO>() { _mapper.Map<GenreDTO>(_context.Genres.Find(1)), new GenreDTO() { GenreId = 4, Name = "Fake"}}};
 
         //     // Act
         //     var actionToTest = (NotFoundObjectResult)_controller.PostTrackWithGenres(trackWithGenresToPost).Result.Result;
@@ -317,8 +317,8 @@ namespace MusicServiceTest.Controller
         // public void PostTrackWithGenres_ReturnsAlreadyExists_Id()
         // {
         //     // Arrange
-        //     TrackWithGenresDTO trackWithGenresToAdd = new TrackWithGenresDTO { TrackId = -7, Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1,Genres = new List<GenreDTO>() { _mapper.Map<GenreDTO>(_context.Genres.Find(1)), _mapper.Map<GenreDTO>(_context.Genres.Find(2)) }};
-        //     TrackWithGenresDTO trackWithGenresToPost = new TrackWithGenresDTO { TrackId = -7, Acousticness = (double)0.1, ArtistName = "ArtistNameOneBis", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1,Genres = new List<GenreDTO>() { _mapper.Map<GenreDTO>(_context.Genres.Find(1)), _mapper.Map<GenreDTO>(_context.Genres.Find(2)) }};
+        //     TrackWithGenresDTO trackWithGenresToAdd = new TrackWithGenresDTO { TrackId = -7, Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1,Genres = new List<GenreDTO>() { _mapper.Map<GenreDTO>(_context.Genres.Find(1)), _mapper.Map<GenreDTO>(_context.Genres.Find(2)) }};
+        //     TrackWithGenresDTO trackWithGenresToPost = new TrackWithGenresDTO { TrackId = -7, Acousticness = (decimal)0.1, ArtistName = "ArtistNameOneBis", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1,Genres = new List<GenreDTO>() { _mapper.Map<GenreDTO>(_context.Genres.Find(1)), _mapper.Map<GenreDTO>(_context.Genres.Find(2)) }};
 
         //     // Act
         //     _context.Tracks.Add(_mapper.Map<Track>(trackWithGenresToAdd));
@@ -333,7 +333,7 @@ namespace MusicServiceTest.Controller
         // public void DeleteTrack_ReturnsOk()
         // {
         //     // Arrange
-        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -8,  Acousticness = (double)0.1, ArtistName = "ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1};
+        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -8,  Acousticness = (decimal)0.1, ArtistName = "ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1};
 
         //     // Act
         //     _context.Tracks.Add(_mapper.Map<Track>(trackToAdd));
@@ -350,7 +350,7 @@ namespace MusicServiceTest.Controller
         // public void AddGenresToTrack_ReturnsOk()
         // {
         //     // Arrange
-        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -9,  Acousticness = (double)0.1, ArtistName = "   ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1};
+        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -9,  Acousticness = (decimal)0.1, ArtistName = "   ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1};
         //     List<GenreDTO> listGenreToAddToTrack = new List<GenreDTO>() {
         //         new GenreDTO { GenreId = 1},
         //         new GenreDTO { GenreId = 2},
@@ -388,7 +388,7 @@ namespace MusicServiceTest.Controller
         // public void AddGenresToTrack_ReturnsNotFound_Genre()
         // {
         //     // Arrange
-        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -10,  Acousticness = (double)0.1, ArtistName = "   ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1};
+        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -10,  Acousticness = (decimal)0.1, ArtistName = "   ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1};
         //     List<GenreDTO> listGenreToAddToTrack = new List<GenreDTO>() {
         //         new GenreDTO { GenreId = 1},
         //         new GenreDTO { GenreId = 1000},
@@ -410,7 +410,7 @@ namespace MusicServiceTest.Controller
         // public void RemoveGenresFromTrack_ReturnsOk()
         // {
         //     // Arrange
-        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -11,  Acousticness = (double)0.1, ArtistName = "   ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1};
+        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -11,  Acousticness = (decimal)0.1, ArtistName = "   ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1};
         //     List<TrackGenre> listTrackGenreToAdd = new List<TrackGenre>() {
         //         new TrackGenre { TrackId = trackToAdd.TrackId, GenreId = 1},
         //         new TrackGenre { TrackId = trackToAdd.TrackId, GenreId = 2},
@@ -453,7 +453,7 @@ namespace MusicServiceTest.Controller
         // public void RemoveGenresFromTrack_ReturnsNotFound_Genre()
         // {
         //     // Arrange
-        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -12,  Acousticness = (double)0.1, ArtistName = "   ArtistNameOne", Danceability = (double)0.1, DurationMs = (double)100, Energy = (double)0.1, Instrumentalness = (double)0.1, Key = "A", Liveness = (double)0.1, Loudness = (double)0.1, Popularity = (double)10, Speechiness =(double)0.1, Tempo = (double)0.1, TrackName = "TrackNameOne", Valence = (double)0.1};
+        //     TrackDTO trackToAdd = new TrackDTO { TrackId = -12,  Acousticness = (decimal)0.1, ArtistName = "   ArtistNameOne", Danceability = (decimal)0.1, DurationMs = (decimal)100, Energy = (decimal)0.1, Instrumentalness = (decimal)0.1, Key = "A", Liveness = (decimal)0.1, Loudness = (decimal)0.1, Popularity = (decimal)10, Speechiness =(decimal)0.1, Tempo = (decimal)0.1, TrackName = "TrackNameOne", Valence = (decimal)0.1};
         //     List<TrackGenre> listTrackGenreToAdd = new List<TrackGenre>() {
         //         new TrackGenre { TrackId = trackToAdd.TrackId, GenreId = 1},
         //         new TrackGenre { TrackId = trackToAdd.TrackId, GenreId = 2},

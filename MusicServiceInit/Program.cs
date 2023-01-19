@@ -31,7 +31,7 @@ namespace MusicServiceInit
             }
 
             if (_context.Genres.ToList().Count == 0 && _context.Tracks.ToList().Count == 0 && _context.Kinds.ToList().Count == 0) {
-                var dataFromCSV = extractDataFromCSV();
+                var dataFromCSV = extractDataFromCSV(ci);
                 List<Genre> listGenreToAdd = dataFromCSV.Item1;
                 List<Track> listTrackToAdd = dataFromCSV.Item2;
                 List<TrackGenre> listTrackGenreToAdd = dataFromCSV.Item3;
@@ -50,7 +50,7 @@ namespace MusicServiceInit
             }
         }
 
-        private static (List<Genre>, List<Track>, List<TrackGenre>) extractDataFromCSV(){
+        private static (List<Genre>, List<Track>, List<TrackGenre>) extractDataFromCSV(CultureInfo ci){
             List<Genre> listGenre = new List<Genre>();
             List<Track> listTrack = new List<Track>();
             List<TrackGenre> listTrackGenre = new List<TrackGenre>();
@@ -75,23 +75,44 @@ namespace MusicServiceInit
 
                         try
                         {
+                            // Track t = new Track {
+                            //     TrackId = j,
+                            //     ArtistName = values[1],
+                            //     TrackName = values[2],
+                            //     Popularity = decimal.Parse(values[3].Replace(".", ",")),
+                            //     Acousticness = decimal.Parse(values[4].Replace(".", ",")),
+                            //     Danceability = decimal.Parse(values[5].Replace(".", ",")),
+                            //     DurationMs = decimal.Parse(values[6].Replace(".", ",")),
+                            //     Energy = decimal.Parse(values[7].Replace(".", ",")),
+                            //     Instrumentalness = decimal.Parse(values[8].Replace(".", ",")),
+                            //     Key = values[9],
+                            //     Liveness = decimal.Parse(values[10].Replace(".", ",")),
+                            //     Loudness = decimal.Parse(values[11].Replace(".", ",")),
+                            //     Speechiness = decimal.Parse(values[13].Replace(".", ",")),
+                            //     Tempo = decimal.Parse(values[14].Replace(".", ",")),
+                            //     Valence = decimal.Parse(values[16].Replace(".", ",")),
+                            // };
+
                             Track t = new Track {
                                 TrackId = j,
                                 ArtistName = values[1],
                                 TrackName = values[2],
-                                Popularity = double.Parse(values[3].Replace(".", ",")),
-                                Acousticness = double.Parse(values[4].Replace(".", ",")),
-                                Danceability = double.Parse(values[5].Replace(".", ",")),
-                                DurationMs = double.Parse(values[6].Replace(".", ",")),
-                                Energy = double.Parse(values[7].Replace(".", ",")),
-                                Instrumentalness = double.Parse(values[8].Replace(".", ",")),
+                                Popularity = Convert.ToDecimal(values[3], ci),
+                                Acousticness = decimal.Parse(values[4].Replace(".", ",")),
+                                Danceability = decimal.Parse(values[5].Replace(".", ",")),
+                                DurationMs = decimal.Parse(values[6].Replace(".", ",")),
+                                Energy = decimal.Parse(values[7].Replace(".", ",")),
+                                Instrumentalness = decimal.Parse(values[8].Replace(".", ",")),
                                 Key = values[9],
-                                Liveness = double.Parse(values[10].Replace(".", ",")),
-                                Loudness = double.Parse(values[11].Replace(".", ",")),
-                                Speechiness = double.Parse(values[13].Replace(".", ",")),
-                                Tempo = double.Parse(values[14].Replace(".", ",")),
-                                Valence = double.Parse(values[16].Replace(".", ",")),
+                                Liveness = decimal.Parse(values[10].Replace(".", ",")),
+                                Loudness = decimal.Parse(values[11].Replace(".", ",")),
+                                Speechiness = decimal.Parse(values[13].Replace(".", ",")),
+                                Tempo = decimal.Parse(values[14].Replace(".", ",")),
+                                Valence = decimal.Parse(values[16].Replace(".", ",")),
                             };
+
+
+                            
 
                             if (!listGenre.Any(g => g.Name == values[17])){
                                 listGenre.Add(new Genre {

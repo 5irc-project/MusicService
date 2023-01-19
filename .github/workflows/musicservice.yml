@@ -2,9 +2,9 @@ name: Docker Build MusicService and Publish CI
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", "tentative-fix" ]
   pull_request:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", "tentative-fix" ]
 
 env:
   REGISTRY: ghcr.io
