@@ -18,9 +18,9 @@ namespace MusicServiceInit
             var cultureInfo = CultureInfo.GetCultureInfo("en-GB");
 
             var numberFormat = new NumberFormatInfo();
-            numberFormat.PercentDecimalSeparator = ",";
+            numberFormat.PercentDecimalSeparator = ".";
             numberFormat.PercentGroupSeparator = ".";
-            numberFormat.CurrencyDecimalSeparator = ",";
+            numberFormat.CurrencyDecimalSeparator = ".";
             numberFormat.CurrencyGroupSeparator = ".";
             numberFormat.NumberDecimalSeparator = ",";
             numberFormat.NumberGroupSeparator = ".";
