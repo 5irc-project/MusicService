@@ -28,7 +28,7 @@ namespace MusicServiceInit
             var services = new ServiceCollection();
             var configurationRoot = ConfigureJsonEnv();
             Console.WriteLine(configurationRoot.GetConnectionString("MusicServiceDBContext"));
-            services.AddDbContext<MusicServiceDBContext>(opt => opt.UseNpgsql(configurationRoot.GetConnectionString("MusicServiceDBContext")));
+            services.AddDbContext<MusicServiceDBContext>(opt => opt.UseNpgsql("Server=localhost;port=8003;Database=MusicServiceDatabase;uid=root;password=root;"));
             var serviceProvider = services.BuildServiceProvider();
             _context = serviceProvider.GetService<MusicServiceDBContext>();
             try{
