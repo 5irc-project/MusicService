@@ -239,7 +239,7 @@ namespace MusicService.Services.Implementations
                 List<TrackWithGenresDTO> listTrackWithGenreRandom = listTrackWithGenre.OrderBy(x => rand.Next()).Take(20).ToList();
                 var action = await this.PostPlaylist(new PlaylistDTO() {
                     KindId = 1,
-                    PlaylistName = "Testing",
+                    PlaylistName = "Discovery",
                     UserId = userId
                 });
                 await this.AddTracksToPlaylist(action.PlaylistId, _mapper.Map<List<TrackDTO>>(_mapper.Map<List<Track>>(listTrackWithGenreRandom)));
@@ -247,6 +247,8 @@ namespace MusicService.Services.Implementations
                 await endpoint.Send<MessageNotificationQueue>(new MessageNotificationQueue(userId, true));
                 return action;
             }catch(Exception e){
+                var endpoint = await _bus.GetSendEndpoint(new Uri(_config["RabbitMQ:Notification"]));
+                await endpoint.Send<MessageNotificationQueue>(new MessageNotificationQueue(userId, false));
                 throw e;
             }
         }
