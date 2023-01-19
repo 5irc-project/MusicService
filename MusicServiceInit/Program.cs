@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
-using System;
+using System.Globalization;
 
 namespace MusicServiceInit
 {
@@ -14,6 +14,9 @@ namespace MusicServiceInit
         private static MusicServiceDBContext? _context;
         static void Main(string[] args)
         {
+            var ci = new CultureInfo("fr-FR");
+            ci.NumberFormat.NumberDecimalSeparator = ".";
+            ci.NumberFormat.CurrencyDecimalSeparator = ".";
             #pragma warning disable CS8602
             var services = new ServiceCollection();
             var configurationRoot = ConfigureJsonEnv();
