@@ -5,6 +5,8 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["MusicService/MusicService.csproj", "MusicService/"]
