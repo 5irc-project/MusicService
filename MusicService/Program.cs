@@ -11,10 +11,6 @@ using System.Globalization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-var ci = new CultureInfo("fr-FR");
-ci.NumberFormat.NumberDecimalSeparator = ".";
-ci.NumberFormat.CurrencyDecimalSeparator = ".";
-
 // Setup RabbitMQ
 builder.Services.AddMassTransit(x => {
     var entryAssembly = Assembly.GetExecutingAssembly();

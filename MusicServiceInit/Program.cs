@@ -14,7 +14,7 @@ namespace MusicServiceInit
         private static MusicServiceDBContext? _context;
         static void Main(string[] args)
         {
-            var ci = new CultureInfo("fr-FR");
+            var ci = new CultureInfo("en-EN");
             ci.NumberFormat.NumberDecimalSeparator = ".";
             ci.NumberFormat.CurrencyDecimalSeparator = ".";
             #pragma warning disable CS8602
