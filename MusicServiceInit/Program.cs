@@ -17,15 +17,12 @@ namespace MusicServiceInit
         {
             var cultureInfo = CultureInfo.GetCultureInfo("en-GB");
 
-            var numberFormat = new NumberFormatInfo();
-            numberFormat.PercentDecimalSeparator = ".";
-            numberFormat.PercentGroupSeparator = ".";
-            numberFormat.CurrencyDecimalSeparator = ".";
-            numberFormat.CurrencyGroupSeparator = ".";
-            numberFormat.NumberDecimalSeparator = ",";
-            numberFormat.NumberGroupSeparator = ".";
-
-            cultureInfo.NumberFormat = numberFormat;
+            cultureInfo.NumberFormat.PercentDecimalSeparator = ".";
+            cultureInfo.NumberFormat.PercentGroupSeparator = ".";
+            cultureInfo.NumberFormat.CurrencyDecimalSeparator = ".";
+            cultureInfo.NumberFormat.CurrencyGroupSeparator = ".";
+            cultureInfo.NumberFormat.NumberDecimalSeparator = ",";
+            cultureInfo.NumberFormat.NumberGroupSeparator = ".";
 
             #pragma warning disable CS8602
             var services = new ServiceCollection();
