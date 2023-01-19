@@ -15,7 +15,7 @@ namespace MusicServiceInit
         private static MusicServiceDBContext? _context;
         static void Main(string[] args)
         {
-            var cultureInfo = CultureInfo.GetCultureInfo("en-GB");
+            var cultureInfo = new CultureInfo("en-GB");
 
             cultureInfo.NumberFormat.PercentDecimalSeparator = ".";
             cultureInfo.NumberFormat.PercentGroupSeparator = ".";
